@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/transparent">
+
+    <!-- Вопрос -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Какая у Вас цель?"
+        android:textSize="36sp"
+        android:layout_marginTop="180dp"
+        android:fontFamily="@font/lato_black"
+        android:textColor="#000000"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Пример вариантов ответов через RadioGroup -->
+    <RadioGroup
+        android:id="@+id/answerRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:divider="@null"
+        android:showDividers="none"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Похудение"
+            android:fontFamily="@font/lato_black"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_button"
+            android:button="@null"
+            android:paddingVertical="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Набор мышечной массы"
+            android:fontFamily="@font/lato_black"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_button"
+            android:button="@null"
+            android:paddingVertical="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Поддержание формы"
+            android:fontFamily="@font/lato_black"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_button"
+            android:button="@null"
+            android:paddingVertical="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Спортивное долголетие"
+            android:fontFamily="@font/lato_black"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_button"
+            android:button="@null"
+            android:paddingVertical="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Дополнительные варианты можно добавить сюда -->
+    </RadioGroup>
+</LinearLayout>
