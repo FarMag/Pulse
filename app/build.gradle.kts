@@ -75,6 +75,10 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation ("com.google.android.material:material:1.11.0")
+<<<<<<< HEAD
+=======
+    implementation("com.auth0.android:jwtdecode:2.0.2")
+>>>>>>> 3941286 (Add full user information)
 //    implementation(libs.firebase.firestore.ktx)
     implementation(libs.mysql.connector.java)
     implementation(libs.okhttp)

@@ -27,6 +27,16 @@ class Question_4_Fragment : Fragment() {
         weightPicker.maxValue = 150
         weightPicker.wrapSelectorWheel = false
 
+<<<<<<< HEAD
+=======
+        if (!::quizAnswers.isInitialized || run {
+                val answer4Value = quizAnswers.answer4
+                answer4Value == null || answer4Value.isEmpty()
+            }) {
+            quizAnswers.answer4 = "${weightPicker.value}" // Устанавливаем значение по умолчанию
+        }
+
+>>>>>>> 3941286 (Add full user information)
         // Кастомизация шрифта
         try {
             val method = weightPicker.javaClass.getDeclaredMethod("updateView", Int::class.java)

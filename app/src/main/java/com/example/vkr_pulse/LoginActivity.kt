@@ -127,7 +127,10 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3941286 (Add full user information)
             private fun handleErrorResponse(responseData: String) {
                 val errorMessage = when {
                     responseData.contains("All fields are required") -> "Заполните все поля"
@@ -147,6 +150,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "Вход успешен", Toast.LENGTH_SHORT).show()
             }
 
+<<<<<<< HEAD
             private fun navigateToMainHomeActivity() {
                 val intent = Intent(this@LoginActivity, MainHomeActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -165,6 +169,8 @@ class LoginActivity : AppCompatActivity() {
                 finish()
             }
 
+=======
+>>>>>>> 3941286 (Add full user information)
             private fun logAndShowToast(message: String, throwable: Throwable? = null) {
                 Log.e("LoginActivity", message, throwable)
                 runOnUiThread {
@@ -174,4 +180,24 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
+<<<<<<< HEAD
+=======
+    private fun navigateToMainHomeActivity() {
+        val intent = Intent(this@LoginActivity, MainHomeActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        finish()
+    }
+
+    private fun navigateToOnboardingQuizActivity() {
+        val intent = Intent(this@LoginActivity, OnboardingQuizActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        finish()
+    }
+>>>>>>> 3941286 (Add full user information)
 }

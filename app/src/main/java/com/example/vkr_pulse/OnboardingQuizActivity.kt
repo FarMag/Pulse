@@ -1,6 +1,7 @@
 package com.example.vkr_pulse
 
 import android.app.AlertDialog
+<<<<<<< HEAD
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -12,6 +13,36 @@ import com.example.vkr_pulse.data.User
 
 class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
 
+=======
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.util.Log
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.auth0.android.jwt.JWT
+import com.example.vkr_pulse.data.QuizAnswers
+import com.example.vkr_pulse.data.User
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+
+class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
+
+    private val okhttpclient = OkHttpClient()
+    private lateinit var sharedPreferences: SharedPreferences
+
+>>>>>>> 3941286 (Add full user information)
     // Количество вопросов
     private val totalQuestions = 5
     private var currentQuestion = 1
@@ -33,6 +64,11 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding_quiz)
 
+<<<<<<< HEAD
+=======
+        sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+
+>>>>>>> 3941286 (Add full user information)
         backButton = findViewById(R.id.backButton)
         nextButton = findViewById(R.id.nextButton)
         progressBar = findViewById(R.id.progressBar)
@@ -70,7 +106,12 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
                 currentQuestion++
                 updateFragment(isForward = true) // Передаем флаг направления
             } else {
+<<<<<<< HEAD
                 navigateToMainMenu()
+=======
+                addUserInformaiton(email, quizAnswers)
+//                navigateToMainMenu()
+>>>>>>> 3941286 (Add full user information)
             }
         }
 
@@ -112,11 +153,29 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
         nextButton.isEnabled = isCurrentQuestionAnswered()
     }
 
+<<<<<<< HEAD
+=======
+//    private fun isCurrentQuestionAnswered(): Boolean {
+//        return when (currentQuestion) {
+//            1 -> quizAnswers.answer1 != null
+//            2 -> quizAnswers.answer2 != null
+//            3, 4, 5 -> true // Всегда возвращаем true для вопросов 3 и 4
+//            else -> false
+//        }
+//    }
+
+>>>>>>> 3941286 (Add full user information)
     private fun isCurrentQuestionAnswered(): Boolean {
         return when (currentQuestion) {
             1 -> quizAnswers.answer1 != null
             2 -> quizAnswers.answer2 != null
+<<<<<<< HEAD
             3, 4, 5 -> true // Всегда возвращаем true для вопросов 3 и 4
+=======
+            3 -> quizAnswers.answer3 != null
+            4 -> quizAnswers.answer4 != null
+            5 -> quizAnswers.answer5 != null
+>>>>>>> 3941286 (Add full user information)
             else -> false
         }
     }
@@ -150,6 +209,98 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
 //            .show()
 //    }
 
+<<<<<<< HEAD
+=======
+    private fun addUserInformaiton(email: String, quizAnswers: QuizAnswers) {
+//        val id = sharedPreferences.getString("sub", null).toString() // null — значение по умолчанию, если ключ не найден
+        val jwtToken = sharedPreferences.getString("refresh_jwt", null).toString()
+        // Декодируйте токен
+        val jwt = JWT(jwtToken)
+        // Извлеките id
+        val id = jwt.getClaim("sub").asString().toString()
+//        val id = sharedPreferences.getString("refresh_jwt", null).toString()
+
+        val url = getString(R.string.url) + "addFullInformationUser"
+        val phis_train = quizAnswers.answer1.toString()
+        val target_phis = quizAnswers.answer2.toString()
+        val height = quizAnswers.answer3.toString()
+        val weight = quizAnswers.answer4.toString()
+        val targetWeight = quizAnswers.answer5.toString()
+
+
+        val formBody = FormBody.Builder()
+            .add("id", id)
+            .add("phis_train", phis_train)
+            .add("height", height)
+            .add("weight", weight)
+            .add("target_phis", target_phis)
+            .add("target_weight", targetWeight)
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(formBody)
+            .build()
+
+        okhttpclient.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                logAndShowToast("Ошибка входа", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+//                    if (!response.isSuccessful) {
+//                        logAndShowToast("Неверный ответ: $response")
+//                        return
+//                    }
+
+                    val responseData = response.body?.string()
+                    handleResponse(responseData)
+                }
+            }
+
+            private fun handleResponse(responseData: String?) {
+                runOnUiThread {
+                    if (responseData != null) {
+                        try {
+                            val jsonResponse = JSONObject(responseData)
+                            when {
+                                jsonResponse.getString("answer") == "Success" ->{
+                                    Toast.makeText(this@OnboardingQuizActivity, "Данные успешно добавлены", Toast.LENGTH_SHORT).show()
+                                    navigateToMainMenu()
+                                }
+                                jsonResponse.getString("answer") == "Error" ->{
+                                    Toast.makeText(this@OnboardingQuizActivity, "Ошибка", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    handleErrorResponse(responseData)
+                                }
+                            }
+                        } catch (e: JSONException) {
+                            Toast.makeText(this@OnboardingQuizActivity, "Ошибка обработки ответа от сервера", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            private fun handleErrorResponse(responseData: String) {
+                val errorMessage = when {
+                    responseData.contains("Bad error") -> "Неизвестная ошибка"
+                    else -> "Ошибка: $responseData"
+                }
+                Toast.makeText(this@OnboardingQuizActivity, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            private fun logAndShowToast(message: String, throwable: Throwable? = null) {
+                Log.e("OnboardingQuizActivity", message, throwable)
+                runOnUiThread {
+                    Toast.makeText(this@OnboardingQuizActivity, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+>>>>>>> 3941286 (Add full user information)
     private fun navigateToMainMenu() {
         val intent = Intent(this, MainHomeActivity::class.java)
         startActivity(intent)

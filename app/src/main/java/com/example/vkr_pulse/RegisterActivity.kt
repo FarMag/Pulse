@@ -202,6 +202,7 @@ class RegisterActivity : AppCompatActivity() {
                     responseData?.let {
                         try {
                             val jsonResponse = JSONObject(it)
+<<<<<<< HEAD
                             if (jsonResponse.has("answer")) {
                                 Toast.makeText(this@RegisterActivity, "Аккаунт успешно создан", Toast.LENGTH_SHORT).show()
 
@@ -217,6 +218,34 @@ class RegisterActivity : AppCompatActivity() {
                                 navigateToQuiz(user)
                             } else {
                                 handleErrorResponse(it)
+=======
+                            when {
+                                jsonResponse.has("message") && jsonResponse.getString("message") == "Success" -> {
+                                    Toast.makeText(this@RegisterActivity, "Аккаунт успешно создан", Toast.LENGTH_SHORT).show()
+
+//                                navigateToLoginActivity()
+
+                                    val accessToken = jsonResponse.getString("access_token")
+                                    val refreshToken = jsonResponse.getString("refresh_token")
+                                    saveTokens(accessToken, refreshToken)
+
+                                    val user = User(
+                                        username = username,
+                                        email = email,
+                                        password = password,
+                                        birth_date = birthDate,
+                                        gender = gender
+                                    )
+
+                                    navigateToQuiz(user)
+                                }
+                                jsonResponse.has("message") && jsonResponse.getString("message") == "This email is already exists" -> {
+                                    Toast.makeText(this@RegisterActivity, "Данный пользователь уже существует", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    handleErrorResponse(it)
+                                }
+>>>>>>> 3941286 (Add full user information)
                             }
                         } catch (e: JSONException) {
                             Toast.makeText(this@RegisterActivity, "Ошибка обработки ответа от сервера", Toast.LENGTH_SHORT).show()
@@ -235,6 +264,19 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
 
+<<<<<<< HEAD
+=======
+            private fun saveTokens(accessToken: String, refreshToken: String) {
+                val preferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+                preferences.edit().apply {
+                    putString("access_jwt", accessToken)
+                    putString("refresh_jwt", refreshToken)
+                    apply()
+                }
+//                Toast.makeText(this@RegisterActivity, "Вход успешен", Toast.LENGTH_SHORT).show()
+            }
+
+>>>>>>> 3941286 (Add full user information)
             private fun navigateToLoginActivity() {
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

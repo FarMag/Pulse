@@ -27,6 +27,17 @@ class Question_3_Fragment : Fragment() {
         heightPicker.maxValue = 220
         heightPicker.wrapSelectorWheel = false
 
+<<<<<<< HEAD
+=======
+        if (!::quizAnswers.isInitialized || run {
+                val answer3Value = quizAnswers.answer3
+                answer3Value == null || answer3Value.isEmpty()
+            }) {
+            quizAnswers.answer3 = "${heightPicker.value}" // Устанавливаем значение по умолчанию
+        }
+
+
+>>>>>>> 3941286 (Add full user information)
         // Кастомизация шрифта
         try {
             val method = heightPicker.javaClass.getDeclaredMethod("updateView", Int::class.java)

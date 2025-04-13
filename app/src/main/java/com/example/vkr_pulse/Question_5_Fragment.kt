@@ -27,8 +27,20 @@ class Question_5_Fragment : Fragment() {
         weightPicker.maxValue = 150
         weightPicker.wrapSelectorWheel = false
 
+<<<<<<< HEAD
         // Установка начального значения из предыдущего ответа
         val previousWeight = quizAnswers.answer4?.replace(" кг", "")?.toIntOrNull() ?: 60
+=======
+        if (!::quizAnswers.isInitialized || run {
+                val answer5Value = quizAnswers.answer5
+                answer5Value == null || answer5Value.isEmpty()
+            }) {
+            quizAnswers.answer5 = "${weightPicker.value}" // Устанавливаем значение по умолчанию
+        }
+
+        // Установка начального значения из предыдущего ответа
+        val previousWeight = quizAnswers.answer4?.replace(" кг", "")?.toIntOrNull() ?: 40
+>>>>>>> 3941286 (Add full user information)
         weightPicker.value = previousWeight.coerceIn(weightPicker.minValue, weightPicker.maxValue)
 
         // Кастомизация шрифта
