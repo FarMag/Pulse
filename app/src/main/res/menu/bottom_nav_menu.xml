@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/logo_home"
+        android:title="Главная"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/trainingFragment"
+        android:icon="@drawable/logo_training"
+        android:title="Активность"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nutritionFragment"
+        android:icon="@drawable/logo_nutrition"
+        android:title="Питание"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/logo_profile"
+        android:title="Профиль"
+        app:showAsAction="ifRoom" />
+</menu>

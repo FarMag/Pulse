@@ -1,0 +1,26 @@
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.vkr_pulse.HomeFragment"
+        android:label="Главная" />
+
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.vkr_pulse.TrainingFragment"
+        android:label="Тренировки" />
+
+    <fragment
+        android:id="@+id/nutritionFragment"
+        android:name="com.example.vkr_pulse.NutritionFragment"
+        android:label="Питание" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.vkr_pulse.ProfileFragment"
+        android:label="Профиль" />
+</navigation>

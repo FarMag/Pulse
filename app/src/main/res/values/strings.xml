@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Pulse</string>
+<!--    <string name="url">http://192.168.1.2/</string>-->
+<!--    <string name="url">http://192.168.1.4:8080/api/</string>-->
+<!--    <string name="url">http://192.168.0.15:8080/api/</string>-->
+    <string name="url_auth">http://192.168.1.4:8001/api/</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nav_bar_height">16dp</dimen>
+    <dimen name="bottom_nav_height">200dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
+</resources>
