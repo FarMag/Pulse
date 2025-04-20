@@ -10,7 +10,7 @@ CREATE TABLE users (
     height DECIMAL(5, 2),
     weight DECIMAL(5, 2),
     target_weight DECIMAL(5, 2),
-    phis_train ENUM('beginner', 'average', 'athlete'),
+    phis_train ENUM('beginner', 'medium', 'athlete'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
