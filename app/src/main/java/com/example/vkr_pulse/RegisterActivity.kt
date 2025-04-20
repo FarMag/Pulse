@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vkr_pulse.data.User
@@ -202,29 +203,9 @@ class RegisterActivity : AppCompatActivity() {
                     responseData?.let {
                         try {
                             val jsonResponse = JSONObject(it)
-<<<<<<< HEAD
-                            if (jsonResponse.has("answer")) {
-                                Toast.makeText(this@RegisterActivity, "Аккаунт успешно создан", Toast.LENGTH_SHORT).show()
-
-//                                navigateToLoginActivity()
-
-                                val user = User(
-                                    username = username,
-                                    email = email,
-                                    password = password,
-                                    birth_date = birthDate,
-                                    gender = gender
-                                )
-                                navigateToQuiz(user)
-                            } else {
-                                handleErrorResponse(it)
-=======
                             when {
                                 jsonResponse.has("message") && jsonResponse.getString("message") == "Success" -> {
-                                    Toast.makeText(this@RegisterActivity, "Аккаунт успешно создан", Toast.LENGTH_SHORT).show()
-
-//                                navigateToLoginActivity()
-
+                                    showSuccessToast("Аккаунт успешно создан!")
                                     val accessToken = jsonResponse.getString("access_token")
                                     val refreshToken = jsonResponse.getString("refresh_token")
                                     saveTokens(accessToken, refreshToken)
@@ -245,7 +226,6 @@ class RegisterActivity : AppCompatActivity() {
                                 else -> {
                                     handleErrorResponse(it)
                                 }
->>>>>>> 3941286 (Add full user information)
                             }
                         } catch (e: JSONException) {
                             Toast.makeText(this@RegisterActivity, "Ошибка обработки ответа от сервера", Toast.LENGTH_SHORT).show()
@@ -253,6 +233,8 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
             }
+
+
 
             private fun handleErrorResponse(responseData: String) {
                 val errorMessage = when {
@@ -264,8 +246,23 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }
 
-<<<<<<< HEAD
-=======
+            private fun showSuccessToast(message: String) {
+                val inflater = layoutInflater
+                val layout = inflater.inflate(R.layout.layout_success_toast, null)
+
+                val toastText = layout.findViewById<TextView>(R.id.toastText)
+                toastText.text = message
+
+                Toast(this@RegisterActivity).apply {
+                    duration = Toast.LENGTH_SHORT
+                    view = layout
+                    setGravity(android.view.Gravity.TOP or android.view.Gravity.CENTER_HORIZONTAL, 0, 120)
+                    show()
+                }
+            }
+
+
+
             private fun saveTokens(accessToken: String, refreshToken: String) {
                 val preferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
                 preferences.edit().apply {
@@ -276,7 +273,7 @@ class RegisterActivity : AppCompatActivity() {
 //                Toast.makeText(this@RegisterActivity, "Вход успешен", Toast.LENGTH_SHORT).show()
             }
 
->>>>>>> 3941286 (Add full user information)
+
             private fun navigateToLoginActivity() {
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

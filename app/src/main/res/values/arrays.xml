@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="activity_levels">
+        <item>Новичок (стаж менее 1 года)</item>
+        <item>Умеренный (стаж от 1 до 3 лет)</item>
+        <item>Атлет (стаж более 3 лет)</item>
+    </string-array>
+    <string-array name="training_goals">
+        <item>Похудение</item>
+        <item>Набор мышечной массы</item>
+        <item>Поддержание формы</item>
+        <item>Спортивное долголетие</item>
+    </string-array>
+</resources>

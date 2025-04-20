@@ -35,6 +35,12 @@
         <item name="strokeColor">@color/yellow</item> <!-- Цвет обводки -->
         <item name="strokeWidth">2dp</item> <!-- Толщина обводки -->
     </style>
+
+    <style name="CustomDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 //import com.example.vkr_pulse.AuthHelper
@@ -127,10 +128,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 3941286 (Add full user information)
             private fun handleErrorResponse(responseData: String) {
                 val errorMessage = when {
                     responseData.contains("All fields are required") -> "Заполните все поля"
@@ -147,10 +144,10 @@ class LoginActivity : AppCompatActivity() {
                     putString("refresh_jwt", refreshToken)
                     apply()
                 }
-                Toast.makeText(this@LoginActivity, "Вход успешен", Toast.LENGTH_SHORT).show()
+                showSuccessToast("Вы успешно вошли в аккаунт")
             }
 
-<<<<<<< HEAD
+
             private fun navigateToMainHomeActivity() {
                 val intent = Intent(this@LoginActivity, MainHomeActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -169,8 +166,7 @@ class LoginActivity : AppCompatActivity() {
                 finish()
             }
 
-=======
->>>>>>> 3941286 (Add full user information)
+
             private fun logAndShowToast(message: String, throwable: Throwable? = null) {
                 Log.e("LoginActivity", message, throwable)
                 runOnUiThread {
@@ -180,8 +176,7 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-<<<<<<< HEAD
-=======
+
     private fun navigateToMainHomeActivity() {
         val intent = Intent(this@LoginActivity, MainHomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -199,5 +194,20 @@ class LoginActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         finish()
     }
->>>>>>> 3941286 (Add full user information)
+
+    private fun showSuccessToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_success_toast, null)
+
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(android.view.Gravity.TOP or android.view.Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
+    }
+
+
 }

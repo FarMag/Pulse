@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Pulse</string>
 <!--    <string name="url">http://192.168.1.2/</string>-->
-<<<<<<< HEAD
+
 <!--    <string name="url">http://192.168.1.2:8080/api/</string>-->
+
+<!-- ip-МАГИ   <string name="url">http://192.168.0.15:8080/api/</string>-->
     <string name="url">http://192.168.0.15:8080/api/</string>
-=======
-    <string name="url">http://192.168.1.4:8080/api/</string>
-<!--    <string name="url">http://192.168.0.15:8080/api/</string>-->
->>>>>>> 3941286 (Add full user information)
+<!-- ip-АНДРЕЯ   <string name="url">http://192.168.1.4:8080/api/</string>-->
+
 </resources>

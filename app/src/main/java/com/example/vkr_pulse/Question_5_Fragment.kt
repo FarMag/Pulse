@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import android.widget.ImageView
 import android.widget.NumberPicker
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.vkr_pulse.data.QuizAnswers
 
@@ -21,45 +23,44 @@ class Question_5_Fragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_question_5, container, false)
         weightPicker = view.findViewById(R.id.weightPicker)
+        val goalText = view.findViewById<TextView>(R.id.goalText)
 
-        // Настройка диапазона веса
+        // Настройка диапазона
         weightPicker.minValue = 40
         weightPicker.maxValue = 150
         weightPicker.wrapSelectorWheel = false
 
-<<<<<<< HEAD
-        // Установка начального значения из предыдущего ответа
+        // Значение из предыдущего ответа
         val previousWeight = quizAnswers.answer4?.replace(" кг", "")?.toIntOrNull() ?: 60
-=======
-        if (!::quizAnswers.isInitialized || run {
-                val answer5Value = quizAnswers.answer5
-                answer5Value == null || answer5Value.isEmpty()
-            }) {
-            quizAnswers.answer5 = "${weightPicker.value}" // Устанавливаем значение по умолчанию
-        }
-
-        // Установка начального значения из предыдущего ответа
-        val previousWeight = quizAnswers.answer4?.replace(" кг", "")?.toIntOrNull() ?: 40
->>>>>>> 3941286 (Add full user information)
         weightPicker.value = previousWeight.coerceIn(weightPicker.minValue, weightPicker.maxValue)
 
-        // Кастомизация шрифта
-        try {
-            val method = weightPicker.javaClass.getDeclaredMethod("updateView", Int::class.java)
-            method.isAccessible = true
-            method.invoke(weightPicker, weightPicker.value)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        // Установим текущее значение, если оно было
+        if (!::quizAnswers.isInitialized || quizAnswers.answer5.isNullOrEmpty()) {
+            quizAnswers.answer5 = "${weightPicker.value}"
         }
 
-        // Обработчик изменений
-        weightPicker.setOnValueChangedListener { picker, oldVal, newVal ->
+        // Обновляем цель
+        updateGoalText(goalText, previousWeight, weightPicker.value)
+
+        // Анимация при изменении значения
+        weightPicker.setOnValueChangedListener { _, _, newVal ->
             quizAnswers.answer5 = "$newVal"
+            updateGoalText(goalText, previousWeight, newVal)
             animatePickerChange()
             listener?.onAnswerSelected()
         }
 
         return view
+    }
+
+    private fun updateGoalText(goalText: TextView, current: Int, target: Int) {
+        val diff = target - current
+        val prefix = when {
+            diff > 0 -> "+$diff"
+            diff < 0 -> "$diff"
+            else -> "0"
+        }
+        goalText.text = "Ваша цель: $prefix кг"
     }
 
     private fun animatePickerChange() {
@@ -76,7 +77,6 @@ class Question_5_Fragment : Fragment() {
         weightPicker.startAnimation(scaleAnim)
     }
 
-    // Остальной код без изменений
     companion object {
         fun newInstance(quizAnswers: QuizAnswers): Question_5_Fragment {
             val fragment = Question_5_Fragment()

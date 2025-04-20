@@ -22,22 +22,19 @@ class Question_3_Fragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_question_3, container, false)
         heightPicker = view.findViewById(R.id.heightPicker)
 
-        // Настройка диапазона веса
+        // Настройка диапазона роста
         heightPicker.minValue = 130
         heightPicker.maxValue = 220
         heightPicker.wrapSelectorWheel = false
 
-<<<<<<< HEAD
-=======
+        // Установка значения по умолчанию, если ответ ещё не выбран
         if (!::quizAnswers.isInitialized || run {
                 val answer3Value = quizAnswers.answer3
                 answer3Value == null || answer3Value.isEmpty()
             }) {
-            quizAnswers.answer3 = "${heightPicker.value}" // Устанавливаем значение по умолчанию
+            quizAnswers.answer3 = "${heightPicker.value}"
         }
 
-
->>>>>>> 3941286 (Add full user information)
         // Кастомизация шрифта
         try {
             val method = heightPicker.javaClass.getDeclaredMethod("updateView", Int::class.java)
@@ -48,7 +45,7 @@ class Question_3_Fragment : Fragment() {
         }
 
         // Обработчик изменений
-        heightPicker.setOnValueChangedListener { picker, oldVal, newVal ->
+        heightPicker.setOnValueChangedListener { _, _, newVal ->
             quizAnswers.answer3 = "$newVal"
             animatePickerChange()
             listener?.onAnswerSelected()
@@ -71,7 +68,6 @@ class Question_3_Fragment : Fragment() {
         heightPicker.startAnimation(scaleAnim)
     }
 
-    // Остальной код без изменений
     companion object {
         fun newInstance(quizAnswers: QuizAnswers): Question_3_Fragment {
             val fragment = Question_3_Fragment()
