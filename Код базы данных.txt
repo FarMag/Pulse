@@ -11,6 +11,7 @@ CREATE TABLE users (
     weight DECIMAL(5, 2),
     target_weight DECIMAL(5, 2),
     phis_train ENUM('beginner', 'medium', 'athlete'),
+    target_phis ENUM('losing', 'mass', 'keeping', 'longevity'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
