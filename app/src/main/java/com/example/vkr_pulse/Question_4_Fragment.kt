@@ -23,8 +23,10 @@ class Question_4_Fragment : Fragment() {
         weightPicker = view.findViewById(R.id.weightPicker)
 
         // Настройка диапазона веса
-        weightPicker.minValue = 40
-        weightPicker.maxValue = 150
+//        weightPicker.minValue = 40
+//        weightPicker.maxValue = 150
+        weightPicker.minValue = resources.getInteger(R.integer.min_weight)
+        weightPicker.maxValue = resources.getInteger(R.integer.max_weight)
         weightPicker.wrapSelectorWheel = false
 
         // Установка значения по умолчанию, если ещё не задано

@@ -26,8 +26,10 @@ class Question_5_Fragment : Fragment() {
         val goalText = view.findViewById<TextView>(R.id.goalText)
 
         // Настройка диапазона
-        weightPicker.minValue = 40
-        weightPicker.maxValue = 150
+//        weightPicker.minValue = 40
+//        weightPicker.maxValue = 150
+        weightPicker.minValue = resources.getInteger(R.integer.min_weight)
+        weightPicker.maxValue = resources.getInteger(R.integer.max_weight)
         weightPicker.wrapSelectorWheel = false
 
         // Значение из предыдущего ответа

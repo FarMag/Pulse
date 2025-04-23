@@ -138,7 +138,7 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
         val jwt = JWT(jwtToken)
         val id = jwt.getClaim("sub").asString().toString()
 
-        val url = getString(R.string.url) + "addFullInformationUser"
+        val url = getString(R.string.url_auth) + "addFullInformationUser"
         val phis_train = quizAnswers.answer1.toString()
         val target_phis = quizAnswers.answer2.toString()
         val height = quizAnswers.answer3.toString()

@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(email: String, password: String) {
-        val url = getString(R.string.url) + "login"
+        val url = getString(R.string.url_auth) + "login"
         val formBody = FormBody.Builder()
             .add("email", email)
             .add("password_hash", password)

@@ -167,7 +167,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun register(username: String, email: String, password: String, birthDate: String, gender: String) {
-        val url = getString(R.string.url) + "register"
+        val url = getString(R.string.url_auth) + "register"
         val formBody = FormBody.Builder()
             .add("username", username)
             .add("email", email)
