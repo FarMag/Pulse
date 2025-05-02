@@ -43,10 +43,10 @@ class MainHomeActivity : AppCompatActivity() {
             // Добавляем слушатель изменения фрагментов
             addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
-                    R.id.homeFragment -> setBackground(R.drawable.yellow)
-                    R.id.trainingFragment -> setBackground(R.drawable.pink)
-                    R.id.nutritionFragment -> setBackground(R.drawable.blue)
-                    R.id.profileFragment -> setBackground(R.drawable.green)
+                    R.id.homeFragment -> setBackground(R.drawable.yellow_new)
+                    R.id.trainingFragment -> setBackground(R.drawable.pink_back)
+                    R.id.nutritionFragment -> setBackground(R.drawable.blue_back)
+                    R.id.profileFragment -> setBackground(R.drawable.green_back)
                     // Добавьте остальные фрагменты
                 }
             }

@@ -47,7 +47,7 @@
                 android:fontFamily="@font/lato_black"
                 android:text="Иван Иванов"
                 android:textColor="#222222"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -130,7 +130,8 @@
                 android:fontFamily="@font/lato_black"
                 android:padding="10dp"
                 android:text="Редактировать данные"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                style="?android:attr/borderlessButtonStyle" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

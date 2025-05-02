@@ -76,6 +76,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation ("com.google.android.material:material:1.11.0")
     implementation("com.auth0.android:jwtdecode:2.0.2")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation(libs.mysql.connector.java)
     implementation(libs.okhttp)
     testImplementation(libs.junit)
