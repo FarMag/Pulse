@@ -12,6 +12,7 @@ CREATE TABLE users (
     target_weight DECIMAL(5, 2),
     phis_train ENUM('beginner', 'medium', 'athlete'),
     target_phis ENUM('losing', 'mass', 'keeping', 'longevity'),
+    xp INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -105,3 +106,23 @@ CREATE TABLE step_logs (
     calories_burned DECIMAL(6, 2),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO progress_logs (user_id, date, weight) VALUES
+(1, '2025-05-25', 72.0),
+(1, '2025-05-26', 73.0),
+(1, '2025-05-27', 74.0),
+(1, '2025-05-28', 75.0),
+(1, '2025-05-29', 76.0),
+(1, '2025-05-30', 74.0),
+(1, '2025-05-31', 75.0),
+(1, '2025-06-01', 73.0);
