@@ -22,6 +22,7 @@ import android.content.SharedPreferences
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ImageView
 import androidx.compose.ui.text.font.FontWeight
 import org.json.JSONException
 import org.json.JSONObject
@@ -33,6 +34,9 @@ import java.util.Locale
 class ProfileFragment : Fragment() {
 
     private val client = OkHttpClient()
+
+//    private val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+//    private val accessToken = preferences.getString("access_jwt", null)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -55,36 +59,16 @@ class ProfileFragment : Fragment() {
             showEditUserDataDialog()
         }
 
-        val userId = getUserId() // Предполагая, что у вас есть метод для получения ID пользователя
-        if (userId != null) {
-            getData(userId)
-        }
-    }
+//        val userId = getUserId() // Предполагая, что у вас есть метод для получения ID пользователя
+//        if (userId != null) {
+//            getData(userId)
+//        }
 
-    private fun getUserId(): String? {
-        // Получаем SharedPreferences
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
-
-        // Получаем JWT токен
-        val jwtToken = preferences.getString("access_jwt", null) // замените "jwt_token_key" на ваш ключ токена
-
-        // Проверяем, не является ли токен null
-        if (jwtToken != null) {
-            // Разделяем токен на части
-            val parts = jwtToken.split(".")
-            if (parts.size == 3) { // Убедимся, что токен имеет 3 части
-                // Декодируем вторую часть (payload)
-                val payload = parts[1]
-                val decodedBytes = Base64.getUrlDecoder().decode(payload)
-                val jsonPayload = String(decodedBytes)
-
-                // Получаем значение sub
-                val jsonObject = JSONObject(jsonPayload)
-                return jsonObject.optString("sub", null) // Возвращаем значение sub
-            }
-        }
-        return null // Если токен отсутствует или невалидный
+        val accessToken = preferences.getString("access_jwt", null)
+        getData(accessToken.toString())
     }
+
 
 //    private fun getData(id: String) {
 //        val url = getString(R.string.url_auth) + "getdata"
@@ -124,10 +108,10 @@ class ProfileFragment : Fragment() {
 //        })
 //    }
 
-    private fun getData(id: String) {
+    private fun getData(access_token: String) {
         val url = getString(R.string.url_auth) + "getUserData"
         val formBody = FormBody.Builder()
-            .add("id", id)
+            .add("access_token", access_token)
             .build()
 
         val request = Request.Builder()
@@ -150,24 +134,24 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            private fun handleResponse(response: Response) {
-                if (!response.isSuccessful) {
-                    handleErrorResponse(response.code)
-                    return
-                }
+                private fun handleResponse(response: Response) {
+                    if (!response.isSuccessful) {
+                        handleErrorResponse(response.code)
+                        return
+                    }
 
-                val responseData = response.body?.string()
-                requireActivity().runOnUiThread {
-                    try {
-                        val jsonResponse = JSONObject(responseData)
-                        // Обновляем пользовательский интерфейс с данными из jsonResponse
-                        // Здесь предполагается наличие полей в JSON. Убедитесь, что они соответствуют вашим данным.
-                        updateUIWithData(jsonResponse)
-                    } catch (e: JSONException) {
-                        Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+                    val responseData = response.body?.string()
+                    requireActivity().runOnUiThread {
+                        try {
+                            val jsonResponse = JSONObject(responseData)
+                            // Обновляем пользовательский интерфейс с данными из jsonResponse
+                            // Здесь предполагается наличие полей в JSON. Убедитесь, что они соответствуют вашим данным.
+                            updateUIWithData(jsonResponse)
+                        } catch (e: JSONException) {
+                            Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-            }
 
             private fun handleErrorResponse(code: Int) {
                 requireActivity().runOnUiThread {
@@ -265,7 +249,7 @@ class ProfileFragment : Fragment() {
 //    }
 
     // Первая версия функции для более полного обновления данных пользователя
-    private fun updateData(id: String, username: String, height: String,
+    private fun updateData(accessToken: String, username: String, height: String,
                            birth_date: String, targetWeight: String, activityLevelInput: String,
                            trainingGoalInput: String) {
 
@@ -286,7 +270,7 @@ class ProfileFragment : Fragment() {
 
         val url = getString(R.string.url_auth) + "updateUserInformation"
         val formBody = FormBody.Builder()
-            .add("id", id)
+            .add("access_token", accessToken)
             .add("username", username)
             .add("height", height)
             .add("birth_date", birth_date)
@@ -299,14 +283,22 @@ class ProfileFragment : Fragment() {
     }
 
     // Вторая версия функции для упрощённого обновления веса
-    private fun updateData(id: String, weight: String) {
-        val url = getString(R.string.url_auth) + "updateUserInformation"
-        val formBody = FormBody.Builder()
-            .add("id", id)
+    private fun updateData(accessToken: String, weight: String) {
+        val urlUserInformation = getString(R.string.url_auth) + "updateUserInformation"
+        val formBodyUserInformation = FormBody.Builder()
+            .add("access_token", accessToken)
             .add("weight", weight)
             .build()
 
-        makeRequest(url, formBody)
+        makeRequest(urlUserInformation, formBodyUserInformation)
+
+        val urlUserCurrentWeight = getString(R.string.url_progress) + "updateUserCurrentWeight"
+        val formBodyUserCurrentWeight = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("weight", weight)
+            .build()
+
+        makeRequest(urlUserCurrentWeight, formBodyUserCurrentWeight)
     }
 
     // Функция для выполнения запроса
@@ -378,6 +370,9 @@ class ProfileFragment : Fragment() {
         val editText = dialogView.findViewById<EditText>(R.id.weightInput)
         val saveButton = dialogView.findViewById<Button>(R.id.saveWeightButton)
 
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null)
+
         val dialog = AlertDialog.Builder(requireContext(), R.style.CustomDialog)
             .setView(dialogView)
             .create()
@@ -396,7 +391,7 @@ class ProfileFragment : Fragment() {
                     } else {
                         view?.findViewById<TextView>(R.id.weightText)?.text = "Текущий вес: $weight кг"
                         try {
-                            updateData(getUserId().toString(),
+                            updateData(accessToken.toString(),
                                 weight.toString()
                             )
                         } catch (e: JSONException) {
@@ -436,6 +431,20 @@ class ProfileFragment : Fragment() {
         val weightTextView = view?.findViewById<TextView>(R.id.weightText)
         val activityLevelTextView = view?.findViewById<TextView>(R.id.activityLevelText)
         val trainingGoalTextView = view?.findViewById<TextView>(R.id.trainingGoalText)
+        val profileImageView = view?.findViewById<ImageView>(R.id.profileImage)
+
+        val gender = jsonResponse.optString("gender")
+        val profileImageResource = when (gender) {
+            "male" -> R.drawable.logo_man
+            "female" -> R.drawable.logo_woman
+            else -> R.drawable.logo_man // Можно заменить на изображение по умолчанию
+        }
+
+// Установим изображение в ImageView
+        profileImageView?.setImageResource(profileImageResource)
+
+
+
 
         // Получение username
         nameTextView?.text = jsonResponse.optString("username", defaultUsername)
@@ -738,7 +747,10 @@ class ProfileFragment : Fragment() {
                 view?.findViewById<TextView>(R.id.trainingGoalText)?.text = "Цель: ${goalPicker.text}"
 
                 try {
-                    updateData(getUserId().toString(),
+                    val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+                    val accessToken = preferences.getString("access_jwt", null)
+
+                    updateData(accessToken.toString(),
                         nameInput.text.toString(),
                         height.toString(),
                         birthInput.text.toString(),

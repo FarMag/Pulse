@@ -82,7 +82,7 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
                 currentQuestion++
                 updateFragment(isForward = true)
             } else {
-                addUserInformaiton(email, quizAnswers)
+                addUserInformation(email, quizAnswers)
             }
         }
 
@@ -133,32 +133,50 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
         }
     }
 
-    private fun addUserInformaiton(email: String, quizAnswers: QuizAnswers) {
-        val jwtToken = sharedPreferences.getString("refresh_jwt", null).toString()
-        val jwt = JWT(jwtToken)
-        val id = jwt.getClaim("sub").asString().toString()
+    private fun addUserInformation(email: String, quizAnswers: QuizAnswers) {
+        val accessToken = sharedPreferences.getString("access_jwt", null) ?: return
 
-        val url = getString(R.string.url_auth) + "addFullInformationUser"
-        val phis_train = quizAnswers.answer1.toString()
-        val target_phis = quizAnswers.answer2.toString()
+        val urlAddFullInformationUser = getString(R.string.url_auth) + "addFullInformationUser"
+        val urlAddUserFirstWeight = getString(R.string.url_progress) + "updateUserCurrentWeight"
+
+        val phisTrain = quizAnswers.answer1.toString()
+        val targetPhis = quizAnswers.answer2.toString()
         val height = quizAnswers.answer3.toString()
         val weight = quizAnswers.answer4.toString()
         val targetWeight = quizAnswers.answer5.toString()
 
-        val formBody = FormBody.Builder()
-            .add("id", id)
-            .add("phis_train", phis_train)
+        // Запрос на добавление полной информации о пользователе
+        val formBodyAddFullInformationUser = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("phis_train", phisTrain)
             .add("height", height)
             .add("weight", weight)
-            .add("target_phis", target_phis)
+            .add("target_phis", targetPhis)
             .add("target_weight", targetWeight)
             .build()
 
-        val request = Request.Builder()
-            .url(url)
-            .post(formBody)
+        val requestAddFullInformationUser = Request.Builder()
+            .url(urlAddFullInformationUser)
+            .post(formBodyAddFullInformationUser)
             .build()
 
+        // Запрос на добавление первого веса пользователя
+        val formBodyAddUserFirstWeight = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("weight", weight)
+            .build()
+
+        val requestAddUserFirstWeight = Request.Builder()
+            .url(urlAddUserFirstWeight)
+            .post(formBodyAddUserFirstWeight)
+            .build()
+
+        // Выполнение запросов
+        executeRequest(requestAddFullInformationUser)
+        executeRequest(requestAddUserFirstWeight)
+    }
+
+    private fun executeRequest(request: Request) {
         okhttpclient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 logAndShowToast("Ошибка входа", e)
@@ -176,12 +194,12 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
                     if (responseData != null) {
                         try {
                             val jsonResponse = JSONObject(responseData)
-                            when {
-                                jsonResponse.getString("answer") == "Success" -> {
+                            when (jsonResponse.getString("answer")) {
+                                "Success" -> {
                                     showSuccessToast("Ваши ответы сохранены!")
                                     navigateToMainMenu()
                                 }
-                                jsonResponse.getString("answer") == "Error" -> {
+                                "Error" -> {
                                     Toast.makeText(this@OnboardingQuizActivity, "Ошибка", Toast.LENGTH_SHORT).show()
                                 }
                                 else -> {
@@ -211,6 +229,8 @@ class OnboardingQuizActivity : AppCompatActivity(), OnAnswerSelectedListener {
             }
         })
     }
+
+
 
     private fun showSuccessToast(message: String) {
         val inflater = layoutInflater
