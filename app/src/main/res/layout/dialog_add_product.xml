@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_card">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Добавить продукт"
+        android:textSize="20sp"
+        android:fontFamily="@font/lato_black"
+        android:textColor="#000"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Поиск продукта..."
+        android:inputType="text"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:background="@drawable/rounded_grey_button"
+        android:fontFamily="@font/lato" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productList"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/gramsInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Сколько грамм?"
+        android:inputType="number"
+        android:padding="12dp"
+        android:background="@drawable/rounded_grey_button"
+        android:fontFamily="@font/lato" />
+
+    <Button
+        android:id="@+id/addProductButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Добавить"
+        android:textColor="#fff"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#03A9F4"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/lato_black"/>
+</LinearLayout>

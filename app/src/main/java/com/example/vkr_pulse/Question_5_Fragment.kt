@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
-import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -24,27 +23,19 @@ class Question_5_Fragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_question_5, container, false)
         weightPicker = view.findViewById(R.id.weightPicker)
         val goalText = view.findViewById<TextView>(R.id.goalText)
+        val skipButton = view.findViewById<TextView>(R.id.skipTargetWeightButton)
 
-        // Настройка диапазона
-//        weightPicker.minValue = 40
-//        weightPicker.maxValue = 150
         weightPicker.minValue = resources.getInteger(R.integer.min_weight)
         weightPicker.maxValue = resources.getInteger(R.integer.max_weight)
         weightPicker.wrapSelectorWheel = false
 
-        // Значение из предыдущего ответа
         val previousWeight = quizAnswers.answer4?.replace(" кг", "")?.toIntOrNull() ?: 60
         weightPicker.value = previousWeight.coerceIn(weightPicker.minValue, weightPicker.maxValue)
 
-        // Установим текущее значение, если оно было
-        if (!::quizAnswers.isInitialized || quizAnswers.answer5.isNullOrEmpty()) {
-            quizAnswers.answer5 = "${weightPicker.value}"
-        }
+        quizAnswers.answer5 = "${weightPicker.value}"
 
-        // Обновляем цель
         updateGoalText(goalText, previousWeight, weightPicker.value)
 
-        // Анимация при изменении значения
         weightPicker.setOnValueChangedListener { _, _, newVal ->
             quizAnswers.answer5 = "$newVal"
             updateGoalText(goalText, previousWeight, newVal)
@@ -52,8 +43,15 @@ class Question_5_Fragment : Fragment() {
             listener?.onAnswerSelected()
         }
 
+        skipButton.setOnClickListener {
+            quizAnswers.answer5 = null
+            goalText.text = "Ваша цель: не указана"
+            listener?.onAnswerSelected()
+        }
+
         return view
     }
+
 
     private fun updateGoalText(goalText: TextView, current: Int, target: Int) {
         val diff = target - current

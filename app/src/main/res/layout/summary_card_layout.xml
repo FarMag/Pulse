@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/summaryCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <!-- Заголовок -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сводка"
+                android:layout_marginStart="0dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#222"
+                android:fontFamily="@font/lato_black" />
+
+            <ImageView
+                android:id="@+id/foodinfoButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="3dp"
+                android:src="@drawable/ic_info"
+                android:tint="#2196F3" />
+
+        </LinearLayout>
+
+        <!-- Калории -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/caloriesLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="455"
+                    android:textSize="22sp"
+                    android:textColor="#000"
+                    android:fontFamily="@font/lato_black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="осталось"
+                    android:textSize="14sp"
+                    android:textColor="#666"
+                    android:fontFamily="@font/lato"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/lottieWrapper"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/calorieLottie"
+                    android:layout_width="175dp"
+                    android:layout_height="175dp"
+                    android:layout_gravity="center"
+                    android:translationX="0dp"
+                    android:translationY="7dp"
+                    app:lottie_loop="false"
+                    app:lottie_fileName="circle_progress.json"
+                    app:lottie_autoPlay="false"
+                    app:lottie_progress="0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/caloriesEaten"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="545"
+                        android:textSize="23sp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#000"
+                        android:fontFamily="@font/lato_black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ккал"
+                        android:textSize="16sp"
+                        android:textColor="#666"
+                        android:fontFamily="@font/lato"/>
+                </LinearLayout>
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/caloriesGoal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textSize="22sp"
+                    android:textColor="#000"
+                    android:fontFamily="@font/lato_black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="по плану"
+                    android:textSize="14sp"
+                    android:textColor="#666"
+                    android:fontFamily="@font/lato"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Заголовок -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Макронутриенты"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/lato_black"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Углеводы -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Углеводы"
+                    android:textSize="14sp"
+                    android:textColor="#222"
+                    android:fontFamily="@font/lato_black" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/carbsProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:progress="0"
+                    android:max="149"
+                    android:progressDrawable="@drawable/bg_progress_bar_rounded_carbs"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/carbsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="40 / 149 г"
+                    android:textColor="#777"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/lato" />
+
+                <!-- Белки -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Белки"
+                    android:textSize="14sp"
+                    android:textColor="#222"
+                    android:fontFamily="@font/lato_black"
+                    android:layout_marginTop="8dp" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/proteinProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:progress="0"
+                    android:max="60"
+                    android:progressDrawable="@drawable/bg_progress_bar_rounded_protein"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/proteinText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="27 / 60 г"
+                    android:textColor="#777"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/lato" />
+
+                <!-- Жиры -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Жиры"
+                    android:textSize="14sp"
+                    android:textColor="#222"
+                    android:fontFamily="@font/lato_black"
+                    android:layout_marginTop="8dp" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/fatProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:progress="0"
+                    android:max="39"
+                    android:progressDrawable="@drawable/bg_progress_bar_rounded_fat"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/fatText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="29 / 39 г"
+                    android:textColor="#777"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/lato" />
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <!--            <Button-->
+        <!--                android:id="@+id/addCaloriesButton"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="Съесть 200 ккал"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:fontFamily="@font/lato_black"-->
+        <!--                android:textColor="#FFFFFF"-->
+        <!--                android:backgroundTint="#03A9F4"-->
+        <!--                android:layout_marginTop="12dp"-->
+        <!--                android:paddingStart="24dp"-->
+        <!--                android:paddingEnd="24dp"-->
+        <!--                android:paddingTop="10dp"-->
+        <!--                android:paddingBottom="10dp"-->
+        <!--                android:elevation="4dp"-->
+        <!--                android:background="@drawable/rounded_button" />-->
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:gravity="center"-->
+        <!--                android:layout_marginTop="16dp"-->
+        <!--                android:weightSum="3">-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/addCarbsButton"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="Съесть 10 г углеводов" />-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/addProteinButton"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="Съесть 5 г белков"-->
+        <!--                    android:layout_marginStart="8dp"-->
+        <!--                    android:layout_marginEnd="8dp"/>-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/addFatButton"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="Съесть 5 г жиров" />-->
+        <!--            </LinearLayout>-->
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

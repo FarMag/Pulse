@@ -22,7 +22,10 @@ import android.content.SharedPreferences
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import androidx.compose.ui.text.font.FontWeight
 import org.json.JSONException
 import org.json.JSONObject
@@ -46,6 +49,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view?.findViewById<ProgressBar>(R.id.profileLoading)?.visibility = View.VISIBLE
+        view?.findViewById<ScrollView>(R.id.profileContent)?.visibility = View.GONE
+
         view.findViewById<Button>(R.id.logoutButton).setOnClickListener {
             logoutAccount()
 //            Toast.makeText(requireContext(), "Выход из аккаунта", Toast.LENGTH_SHORT).show()
@@ -67,6 +73,8 @@ class ProfileFragment : Fragment() {
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null)
         getData(accessToken.toString())
+
+
     }
 
 
@@ -123,7 +131,7 @@ class ProfileFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+                    showCustomErrorToast("Ошибка получения данных")
                 }
             }
 
@@ -148,7 +156,7 @@ class ProfileFragment : Fragment() {
                             // Здесь предполагается наличие полей в JSON. Убедитесь, что они соответствуют вашим данным.
                             updateUIWithData(jsonResponse)
                         } catch (e: JSONException) {
-                            Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+                            showCustomErrorToast("Ошибка разбора данных")
                         }
                     }
                 }
@@ -156,10 +164,10 @@ class ProfileFragment : Fragment() {
             private fun handleErrorResponse(code: Int) {
                 requireActivity().runOnUiThread {
                     when (code) {
-                        400 -> Toast.makeText(requireContext(), "Ошибка: ID не предоставлен", Toast.LENGTH_SHORT).show()
-                        404 -> Toast.makeText(requireContext(), "Ошибка: Пользователь не найден", Toast.LENGTH_SHORT).show()
-                        500 -> Toast.makeText(requireContext(), "Ошибка сервера, попробуйте позже", Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(requireContext(), "Неизвестная ошибка: $code", Toast.LENGTH_SHORT).show()
+                        400 -> showCustomErrorToast("Ошибка: ID не предоставлен")
+                        404 -> showCustomErrorToast("Ошибка: Пользователь не найден")
+                        500 -> showCustomErrorToast("Ошибка сервера, попробуйте позже")
+                        else -> showCustomErrorToast("Неизвестная ошибка")
                     }
                 }
             }
@@ -290,7 +298,7 @@ class ProfileFragment : Fragment() {
             .add("weight", weight)
             .build()
 
-        makeRequest(urlUserInformation, formBodyUserInformation)
+        makeRequest(urlUserInformation, formBodyUserInformation, showToast = true)
 
         val urlUserCurrentWeight = getString(R.string.url_progress) + "updateUserCurrentWeight"
         val formBodyUserCurrentWeight = FormBody.Builder()
@@ -298,11 +306,11 @@ class ProfileFragment : Fragment() {
             .add("weight", weight)
             .build()
 
-        makeRequest(urlUserCurrentWeight, formBodyUserCurrentWeight)
+        makeRequest(urlUserCurrentWeight, formBodyUserCurrentWeight, showToast = false)
     }
 
     // Функция для выполнения запроса
-    private fun makeRequest(url: String, formBody: RequestBody) {
+    private fun makeRequest(url: String, formBody: RequestBody, showToast: Boolean = true) {
         val request = Request.Builder()
             .url(url)
             .post(formBody)
@@ -312,13 +320,12 @@ class ProfileFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
                 requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+                    showCustomErrorToast("Ошибка получения данных")
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
-                    // Используем функцию handleResponse для обработки ответа
                     handleResponse(response)
                 }
             }
@@ -333,32 +340,25 @@ class ProfileFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     try {
                         val jsonResponse = JSONObject(responseData)
-                        // Проверяем наличие поля "answer" в jsonResponse
                         val answer = jsonResponse.optString("answer")
-                        if (answer == "Success") {
-                            Toast.makeText(requireContext(), "Информация успешно обновлена!", Toast.LENGTH_SHORT).show()
-//                            showSuccessToast()
-                        } else {
-                            // Обработка других posibles состояний ответа
-                            Toast.makeText(requireContext(), answer ?: "Неизвестный ответ", Toast.LENGTH_SHORT).show()
+                        if (answer == "Success" && showToast) {
+                            showCustomSuccessToast("Информация успешно обновлена!")
                         }
-                        // Здесь вы можете обновить пользовательский интерфейс с данными из jsonResponse
-                        // updateUIWithData(jsonResponse)
                     } catch (e: JSONException) {
-                        Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+                        showCustomErrorToast("Ошибка разбора данных!")
                     }
                 }
             }
 
-
             private fun handleErrorResponse(code: Int) {
                 requireActivity().runOnUiThread {
-                    when (code) {
-                        400 -> Toast.makeText(requireContext(), "Ошибка: ID не предоставлен", Toast.LENGTH_SHORT).show()
-                        404 -> Toast.makeText(requireContext(), "Ошибка: Пользователь не найден", Toast.LENGTH_SHORT).show()
-                        500 -> Toast.makeText(requireContext(), "Ошибка сервера, попробуйте позже", Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(requireContext(), "Неизвестная ошибка: $code", Toast.LENGTH_SHORT).show()
+                    val msg = when (code) {
+                        400 -> "Ошибка: ID не предоставлен"
+                        404 -> "Ошибка: Пользователь не найден"
+                        500 -> "Ошибка сервера, попробуйте позже"
+                        else -> "Неизвестная ошибка"
                     }
+                    showCustomErrorToast(msg)
                 }
             }
         })
@@ -395,7 +395,7 @@ class ProfileFragment : Fragment() {
                                 weight.toString()
                             )
                         } catch (e: JSONException) {
-                            Toast.makeText(requireContext(), "Ошибка сохранение данных", Toast.LENGTH_SHORT).show()
+                            showCustomErrorToast("Ошибка сохранение данных!")
                         }
                         dialog.dismiss()
                     }
@@ -413,6 +413,10 @@ class ProfileFragment : Fragment() {
 
 
     private fun updateUIWithData(jsonResponse: JSONObject) {
+
+        view?.findViewById<ProgressBar>(R.id.profileLoading)?.visibility = View.GONE
+        view?.findViewById<ScrollView>(R.id.profileContent)?.visibility = View.VISIBLE
+
         val defaultUsername = "Не указано"
         val defaultEmail = "Не указана"
         val defaultHeight = "Не указано см"
@@ -721,19 +725,19 @@ class ProfileFragment : Fragment() {
             // Проверка на корректность роста
             if (height == null || height < resources.getInteger(R.integer.min_height)
                 || height > resources.getInteger(R.integer.max_height)) {
-                Toast.makeText(context, "Введите корректный рост (от 130 до 220 см)", Toast.LENGTH_SHORT).show()
+                showCustomNotificationToast("Введите корректный рост (от 130 до 220 см)")
                 hasErrors = true
             }
 
             // Проверка на корректность веса
             if (targetWeight == null || targetWeight < resources.getInteger(R.integer.min_weight)
                 || targetWeight > resources.getInteger(R.integer.max_weight)) {
-                Toast.makeText(context, "Введите корректный целевой вес (от 40 до 150 кг)", Toast.LENGTH_SHORT).show()
+                showCustomNotificationToast("Введите корректный целевой вес (от 40 до 150 кг)")
                 hasErrors = true
             }
 
             if (!isValidDate(birthInput.text.toString())) {
-                Toast.makeText(context, "Введите корректную дату рождения", Toast.LENGTH_SHORT).show()
+                showCustomNotificationToast("Введите корректную дату рождения")
                 hasErrors = true
             }
 
@@ -759,7 +763,7 @@ class ProfileFragment : Fragment() {
                         goalPicker.text.toString())
                     dialog.dismiss() // Закрываем диалог только при успешном сохранении
                 } catch (e: JSONException) {
-                    Toast.makeText(requireContext(), "Ошибка сохранение данных", Toast.LENGTH_SHORT).show()
+                    showCustomErrorToast("Ошибка сохранение данных")
                 }
             }
         }
@@ -797,7 +801,7 @@ class ProfileFragment : Fragment() {
         editor.apply() // Применяем изменения
 
         // Выводим сообщение о выходе
-        Toast.makeText(requireActivity(), "Вы успешно вышли из аккаунта", Toast.LENGTH_SHORT).show()
+        showCustomSuccessToast("Вы успешно вышли из аккаунта")
 
         // Переход на MainActivity
         val intent = Intent(requireActivity(), MainActivity::class.java)
@@ -807,7 +811,47 @@ class ProfileFragment : Fragment() {
         requireActivity().finish()
     }
 
+    fun showCustomSuccessToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_success_toast, null)
 
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
+    }
+
+    fun showCustomErrorToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_error_toast, null)
+
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
+    }
+
+    fun showCustomNotificationToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_notification_toast, null)
+
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
+    }
 
     private fun isValidDate(date: String): Boolean {
         // Проверка формата

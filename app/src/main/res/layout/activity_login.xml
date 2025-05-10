@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@drawable/background_yellow">
+    android:background="@drawable/yellow_new">
 
     <ImageView
         android:id="@+id/LogoImage"

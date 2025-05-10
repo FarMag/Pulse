@@ -77,6 +77,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.11.0")
     implementation("com.auth0.android:jwtdecode:2.0.2")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation ("com.airbnb.android:lottie:6.4.0")
     implementation(libs.mysql.connector.java)
     implementation(libs.okhttp)
     testImplementation(libs.junit)
@@ -86,6 +87,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-
 }

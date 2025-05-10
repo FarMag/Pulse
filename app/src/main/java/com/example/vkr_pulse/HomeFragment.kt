@@ -76,6 +76,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        val mainContent = view.findViewById<ScrollView>(R.id.mainContent)
+        val loadingIndicator = view.findViewById<ProgressBar>(R.id.loadingIndicator)
+
+        mainContent.visibility = View.GONE
+        loadingIndicator.visibility = View.VISIBLE
 //        sharedPreferences = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 //        val userId = sharedPreferences.getString("sub", null)
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
@@ -94,7 +100,6 @@ class HomeFragment : Fragment() {
         weightText = view.findViewById(R.id.currentWeightText)
         goalWeightText = view.findViewById(R.id.targetWeightText)
         progressChart = view.findViewById(R.id.progressChart)
-        progressPercentText = view.findViewById(R.id.weightProgressPercent)
         weightLeftText = view.findViewById(R.id.weightLeftText)
 
 //        val userName = "Иван"
@@ -257,6 +262,7 @@ class HomeFragment : Fragment() {
                 }
             })
         }
+
     }
 
     private fun updateUserXp(accessToken: String, currentXp: Int) {
@@ -466,6 +472,7 @@ class HomeFragment : Fragment() {
 
     private fun parseUserData(jsonData: JSONObject){
 //        val jsonObject = JSONObject(jsonData)
+
         val userName = jsonData.getString("username")
 //        val level = jsonObject.getInt("level")
 //        val currentXp = jsonObject.getInt("currentXp")
@@ -551,26 +558,27 @@ class HomeFragment : Fragment() {
             updateXpUI(level, currentXp, maxXp, title)
 
             startPhraseRotation(targetPhis)
+
+            view?.findViewById<ScrollView>(R.id.mainContent)?.visibility = View.VISIBLE
+            view?.findViewById<ProgressBar>(R.id.loadingIndicator)?.visibility = View.GONE
         }
 //        return targetPhis
     }
 
     private fun parseProgressData(jsonData: JSONObject) {
-        val firstWeight = jsonData.getJSONObject("first_data_user") // Изменили на getJSONObject
-        val startWeight = firstWeight.getString("weight").toFloat() // Преобразуем в Float
+        val firstWeight = jsonData.getJSONObject("first_data_user")
+        val startWeight = firstWeight.getString("weight").toFloat()
 
-        val weightHistory = mutableListOf<ProgressData>() // Создаем список для хранения данных
+        val weightHistory = mutableListOf<ProgressData>()
         val weightHistoryJsonArray = jsonData.getJSONArray("all_progress_logs")
 
         for (i in 0 until weightHistoryJsonArray.length()) {
             val progressItem = weightHistoryJsonArray.getJSONObject(i)
             val date = progressItem.getString("date")
-            val weight = progressItem.getString("weight").toFloat() // Преобразуем в Float
-
-            weightHistory.add(ProgressData(date, weight)) // Добавляем данные в список
+            val weight = progressItem.getString("weight").toFloat()
+            weightHistory.add(ProgressData(date, weight))
         }
 
-        // Теперь создаем записи для графика
         val entries = weightHistory.mapIndexed { index, entry ->
             Entry(index.toFloat(), entry.weight)
         }
@@ -584,38 +592,45 @@ class HomeFragment : Fragment() {
             fillAlpha = 100
             fillColor = resources.getColor(R.color.teal_200, null)
             mode = LineDataSet.Mode.CUBIC_BEZIER
+            setDrawValues(false)
         }
 
-        dataSet.setDrawValues(false) // отключить отображение значений на графике
         progressChart.data = LineData(dataSet)
 
         progressChart.apply {
             description.isEnabled = false
             axisRight.isEnabled = false
+            setTouchEnabled(false)
+            setScaleEnabled(false) // 🔒 запрещаем масштаб
+            setExtraBottomOffset(14f) // ⬇️ фикс отступ снизу
 
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.labelRotationAngle = -30f
-            xAxis.granularity = 1f
-            xAxis.valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                labelRotationAngle = -30f
+                granularity = 1f
+                textSize = 11f // 🔤 чтобы не обрезалось
+                valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
+            }
 
-            axisLeft.setDrawGridLines(true)
-            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+            axisLeft.apply {
+                setDrawGridLines(true)
+                setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+            }
 
             legend.isEnabled = false
-            setTouchEnabled(false)
             invalidate()
         }
 
         requireActivity().runOnUiThread {
-
-            // Предположим, что значения targetWeight и currentWeight определены где-то
-            val delta = abs(targetWeight - startWeight).toFloat()
+            val currentWeight = currentWeight
+            val delta = abs(targetWeight - startWeight)
             val progressDelta = abs(currentWeight - startWeight)
-            val progressPercent =
-                if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
+            val progressPercent = if (delta != 0.0) (progressDelta / delta * 100).coerceIn(0.0, 100.0) else 0.0
+//            progressPercentText.text = "Прогресс: ${progressPercent.toInt()}%"
 
-            progressPercentText.text = "Прогресс: ${progressPercent.toInt()}%"
+            view?.findViewById<ScrollView>(R.id.mainContent)?.visibility = View.VISIBLE
+            view?.findViewById<ProgressBar>(R.id.loadingIndicator)?.visibility = View.GONE
         }
     }
 

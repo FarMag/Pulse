@@ -1,195 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:clipChildren="false"
-    android:clipToPadding="false">
+    android:layout_height="match_parent">
 
-    <!-- Верхний профиль -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/profileCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="48dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profileImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="Profile image"
-                android:scaleType="centerCrop"
-                android:src="@drawable/logo_man"
-                app:shapeAppearanceOverlay="@style/CircleImageViewStyle"/>
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/lato_black"
-                android:text="Иван Иванов"
-                android:textColor="#222222"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Персональные данные -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardUserData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+    <!-- Прелоадер -->
+    <ProgressBar
+        android:id="@+id/profileLoading"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/profileCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
+        android:indeterminate="true"
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="gone" />
 
-        <LinearLayout
+    <!-- Основной контент (по умолчанию скрыт до загрузки) -->
+    <ScrollView
+        android:id="@+id/profileContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingBottom="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Персональные данные"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/lato_black"
-                android:layout_marginBottom="8dp"/>
-
-            <!-- Существующие -->
-            <TextView
-                android:id="@+id/emailText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Почта: user@example.com"/>
-            <TextView
-                android:id="@+id/birthdateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Дата рождения: 01.01.2000"/>
-            <TextView
-                android:id="@+id/genderText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Пол: Мужской"/>
-
-            <!-- Новые поля -->
-            <TextView
-                android:id="@+id/heightText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Рост: 180 см"/>
-            <TextView
-                android:id="@+id/targetWeightText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Целевой вес: 70 кг"/>
-            <TextView
-                android:id="@+id/activityLevelText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Уровень активности: Умеренный"/>
-            <TextView
-                android:id="@+id/trainingGoalText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Цель: Поддержание формы"/>
-
-            <Button
-                android:id="@+id/editPersonalDataButton"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/green"
-                android:fontFamily="@font/lato_black"
-                android:padding="10dp"
-                android:text="Редактировать данные"
-                android:textSize="12sp"
-                style="?android:attr/borderlessButtonStyle" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Текущий вес -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardWeight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardUserData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/weightText"
+            <!-- Верхний профиль -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Текущий вес: 75 кг"
-                android:textSize="16sp"/>
-            <ImageButton
-                android:id="@+id/editWeightButton"
-                android:layout_width="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="48dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:contentDescription="Profile image"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo_man"
+                        app:shapeAppearanceOverlay="@style/CircleImageViewStyle" />
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/lato_black"
+                        android:text="Иван Иванов"
+                        android:textColor="#222222"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Персональные данные -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardUserData"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="Изменить вес"
-                android:src="@android:drawable/ic_menu_edit"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/profileCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
 
-    <!-- Кнопка выхода -->
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="#FFC107"
-        android:fontFamily="@font/lato_black"
-        android:text="Выйти"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/cardWeight"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Персональные данные"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/lato_black"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/emailText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Почта: user@example.com" />
+                    <TextView
+                        android:id="@+id/birthdateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Дата рождения: 01.01.2000" />
+                    <TextView
+                        android:id="@+id/genderText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Пол: Мужской" />
+                    <TextView
+                        android:id="@+id/heightText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Рост: 180 см" />
+                    <TextView
+                        android:id="@+id/targetWeightText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Целевой вес: 70 кг" />
+                    <TextView
+                        android:id="@+id/activityLevelText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Уровень активности: Умеренный" />
+                    <TextView
+                        android:id="@+id/trainingGoalText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Цель: Поддержание формы" />
+
+                    <Button
+                        android:id="@+id/editPersonalDataButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/green"
+                        android:fontFamily="@font/lato_black"
+                        android:padding="10dp"
+                        android:text="Редактировать данные"
+                        android:textSize="12sp"
+                        style="?android:attr/borderlessButtonStyle" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Текущий вес -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardWeight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/cardUserData"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/weightText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Текущий вес: 75 кг"
+                        android:textSize="16sp" />
+                    <ImageButton
+                        android:id="@+id/editWeightButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="Изменить вес"
+                        android:src="@android:drawable/ic_menu_edit" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Кнопка выхода -->
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#FFC107"
+                android:fontFamily="@font/lato_black"
+                android:text="Выйти"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/cardWeight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</FrameLayout>

@@ -59,4 +59,15 @@
         android:textSize="24sp"
         android:textColor="#000000"/>
 
+    <TextView
+        android:id="@+id/skipTargetWeightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Не указывать"
+        android:textColor="@color/yellow"
+        android:textSize="20sp"
+        android:fontFamily="@font/lato_black"
+        android:layout_marginTop="96dp"
+        android:layout_gravity="center_horizontal"/>
+
 </LinearLayout>
