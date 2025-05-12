@@ -1,0 +1,35 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:padding="1dp"
+    android:background="@android:color/transparent">
+
+    <!-- Фон-кружок для выделения текущего дня -->
+    <View
+        android:id="@+id/todayBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_circle_today"
+        android:visibility="gone" />
+
+    <!-- Число дня — всегда по центру -->
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="#000" />
+
+    <!-- Иконка гантели — фиксированно внизу и по центру -->
+    <ImageView
+        android:id="@+id/workoutIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_dumbbell"
+        android:visibility="gone" />
+
+</FrameLayout>

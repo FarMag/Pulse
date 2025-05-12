@@ -7,13 +7,14 @@
     <!-- Прелоадер -->
     <ProgressBar
         android:id="@+id/profileLoading"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
         android:indeterminate="true"
-        android:progressDrawable="@drawable/progressbar"
-        android:visibility="gone" />
+        android:indeterminateDrawable="@drawable/loading_custom_progressbar"
+        android:visibility="gone"
+        />
 
     <!-- Основной контент (по умолчанию скрыт до загрузки) -->
     <ScrollView

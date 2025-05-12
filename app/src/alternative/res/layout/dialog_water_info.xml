@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/rounded_dialog_bg">
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Рекомендуемое количество воды — 30–35 мл на 1 кг массы тела.\n\nЭти рекомендации основаны на данных Института медицины США (Institute of Medicine, 2005) и учитывают поддержание водно-солевого баланса при обычной активности."
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/lato"
+        android:lineSpacingExtra="4dp" />
+</LinearLayout>

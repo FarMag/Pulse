@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/transparent">
+
+    <!-- Цель пользователя -->
+    <LinearLayout
+        android:id="@+id/goalContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/rounded_field"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="48dp">
+
+        <TextView
+            android:id="@+id/goalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ваша цель: -10 кг"
+            android:textSize="16sp"
+            android:textColor="#222222"
+            android:fontFamily="@font/lato_black"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="1dp"
+            android:src="@drawable/ic_star_outline"
+            android:contentDescription="Звезда" />
+    </LinearLayout>
+
+    <!-- Вопрос -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Какой Ваш желаемый вес (кг)?"
+        android:textSize="36sp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/lato_black"
+        android:textColor="#000000"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Кастомный NumberPicker -->
+    <NumberPicker
+        android:id="@+id/weightPicker"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:theme="@style/CustomNumberPicker"
+        android:textSize="24sp"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/skipTargetWeightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Не указывать"
+        android:textColor="@color/yellow"
+        android:textSize="20sp"
+        android:fontFamily="@font/lato_black"
+        android:layout_marginTop="96dp"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

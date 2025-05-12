@@ -473,9 +473,12 @@
     <!-- Прелоадер -->
     <ProgressBar
         android:id="@+id/loadingIndicator"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/loading_custom_progressbar"
+        android:visibility="visible"
+        />
 </FrameLayout>

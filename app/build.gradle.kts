@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -31,6 +29,24 @@ android {
             )
         }
     }
+
+    // ✅ ВАЖНО: Добавляешь flavors
+    flavorDimensions += "design"
+    productFlavors {
+        create("original") {
+            dimension = "design"
+            applicationIdSuffix = ".original"
+            versionNameSuffix = "-original"
+            resValue("string", "app_name", "Pulse Original")
+        }
+        create("alternative") {
+            dimension = "design"
+            applicationIdSuffix = ".alternative"
+            versionNameSuffix = "-alt"
+            resValue("string", "app_name", "Pulse Alt")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,6 +94,7 @@ dependencies {
     implementation("com.auth0.android:jwtdecode:2.0.2")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation ("com.airbnb.android:lottie:6.4.0")
+    implementation ("com.kizitonwose.calendar:view:2.5.2")
     implementation(libs.mysql.connector.java)
     implementation(libs.okhttp)
     testImplementation(libs.junit)

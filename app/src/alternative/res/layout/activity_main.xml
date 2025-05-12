@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/animated_gradient">
+
+
+    <!-- Фон с изображением -->
+<!--    <ImageView-->
+<!--        android:id="@+id/centerImage"-->
+<!--        android:layout_width="339dp"-->
+<!--        android:layout_height="327dp"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:contentDescription="Center Image"-->
+<!--        android:src="@drawable/pulse_center_logo"-->
+<!--        android:visibility="visible" />-->
+
+    <!-- Текст приветствия -->
+
+    <TextView
+        android:id="@+id/healthText"
+        android:layout_width="336dp"
+        android:layout_height="448dp"
+        android:layout_above="@id/startButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginBottom="153dp"
+        android:fontFamily="@font/lato_black"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:text="Здоровье"
+        android:textColor="#000000"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="315dp"
+        android:layout_above="@id/startButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginBottom="136dp"
+        android:fontFamily="@font/lato_black"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:text="- это самое ценное, что есть у людей. Давай сделаем его крепче!"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <!-- Кнопка -->
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Начать"
+        android:textSize="20sp"
+        android:backgroundTint="@color/blue"
+        android:textColor="#000000"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginTop="40dp"
+
+        android:layout_marginStart="80dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/lato_black"
+        android:elevation="4dp"
+        android:background="@drawable/rounded_button" />
+
+</RelativeLayout>

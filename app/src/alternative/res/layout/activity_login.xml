@@ -1,0 +1,96 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/blue_back">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_black"
+        android:text="Авторизация"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:layout_marginTop="80dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_field"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_marginTop="30dp">
+
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Авторизация"-->
+        <!--            android:layout_marginTop="12dp"-->
+        <!--            android:textSize="28sp"-->
+        <!--            android:layout_marginBottom="30dp"-->
+        <!--            android:textColor="#F22828"-->
+        <!--            android:textAlignment="center"-->
+        <!--            />-->
+
+        <EditText
+            android:id="@+id/emailField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/rounded_text"
+            android:fontFamily="@font/lato"
+            android:hint="Почта"
+            android:inputType="textEmailAddress"
+            android:padding="35px" />
+
+        <!-- Поле ввода пароля -->
+        <EditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_text"
+            android:fontFamily="@font/lato"
+            android:hint="Пароль"
+            android:inputType="textPassword"
+            android:padding="35px" />
+
+        <!-- Кнопка "Войти" -->
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#00C8FF"
+            android:fontFamily="@font/lato_black"
+            android:text="Войти"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+
+        <!-- Текст "Нет аккаунта?" -->
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/yellow"
+            android:fontFamily="@font/lato_black"
+            android:text="Нет аккаунта? Зарегистрируйтесь!"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

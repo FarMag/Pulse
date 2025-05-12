@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/rounded_dialog_bg">
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Калории рассчитываются по формуле Харриса-Бенедикта с учётом веса, роста, возраста, пола и уровня активности.\n\nЦель влияет на суточную норму:\n• Похудение — дефицит 10–25%\n• Набор массы — профицит 10–20%\n• Поддержание — ±5% от нормы\n\nБелки: 1.6–2.4 г/кг\nЖиры: 20–35% от калорий\nУглеводы: остаток калорий, но не менее 3–5 г/кг при тренировках"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/lato"
+        android:lineSpacingExtra="4dp" />
+</LinearLayout>

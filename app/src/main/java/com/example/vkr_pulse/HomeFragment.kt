@@ -134,18 +134,18 @@ class HomeFragment : Fragment() {
         stepsProgressBar.progress = stepsPercentage
 
 
-        // Кнопка теста добавления XP (временно, для проверки анимации и звука)
-        val testXpButton = view.findViewById<Button>(R.id.testXpButton)
-        testXpButton.setOnClickListener {
-            currentTotalXp += 50
-
-            val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
-            val accessToken = preferences.getString("access_jwt", null)
-            updateUserXp(accessToken.toString(), currentTotalXp)
-
-            val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
-            updateXpUI(level, currentXp, maxXp, title)
-        }
+//        // Кнопка теста добавления XP (временно, для проверки анимации и звука)
+//        val testXpButton = view.findViewById<Button>(R.id.testXpButton)
+//        testXpButton.setOnClickListener {
+//            currentTotalXp += 50
+//
+//            val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+//            val accessToken = preferences.getString("access_jwt", null)
+//            updateUserXp(accessToken.toString(), currentTotalXp)
+//
+//            val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
+//            updateXpUI(level, currentXp, maxXp, title)
+//        }
 
         val knowledgeCard = view.findViewById<CardView>(R.id.knowledgeCard)
         knowledgeCard.setOnClickListener {

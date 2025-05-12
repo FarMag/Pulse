@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Прелоадер -->
+    <ProgressBar
+        android:id="@+id/profileLoading"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/loading_custom_progressbar"
+        android:visibility="gone"/>
+
+    <!-- Основной контент -->
+    <ScrollView
+        android:id="@+id/profileContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <!-- Профиль и имя -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp"
+                android:layout_margin="4dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/logo_man"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/CircleImageViewStyle"/>
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Иван Иванов"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/lato_black"
+                        android:textColor="#222222"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="16dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Текущий вес с иконкой справа -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
+                android:layout_margin="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/weightText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="75 кг"
+                        android:textSize="24sp"
+                        android:textColor="#222"
+                        android:textStyle="bold"/>
+
+                    <ImageButton
+                        android:id="@+id/editWeightButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_edit"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/weightText"
+                        android:text="Текущий вес"
+                        android:textSize="14sp"
+                        android:textColor="#888"/>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Персональные данные -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardUserData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
+                android:layout_margin="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    >
+
+                    <TextView
+                        android:text="Персональные данные"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/lato_black"
+                        android:layout_marginBottom="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView android:id="@+id/emailText" android:text="Почта: user@example.com"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/birthdateText" android:text="Дата рождения: 01.01.2000"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/genderText" android:text="Пол: Мужской"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/heightText" android:text="Рост: 180 см"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/targetWeightText" android:text="Целевой вес: 70 кг"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/activityLevelText" android:text="Активность: Умеренная"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/trainingGoalText" android:text="Цель: Поддержание формы"     android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/editPersonalDataButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/pink"
+                        android:text="Редактировать данные"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/lato_black"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Выйти -->
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Выйти"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/lato_black"
+                android:padding="12dp"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
