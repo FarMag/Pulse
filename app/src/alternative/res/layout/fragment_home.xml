@@ -30,6 +30,83 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="#222" />
 
+            <!-- Блок уровня -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/xpCard"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/rankImageView"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:src="@drawable/cropped_image_1"
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="Ранг" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/userLevel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Уровень 3"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#222"
+                            android:fontFamily="@font/lato_black" />
+
+                        <TextView
+                            android:id="@+id/userRank"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Активист"
+                            android:textSize="14sp"
+                            android:textColor="#777"
+                            android:fontFamily="@font/lato"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="4dp" />
+
+                        <ProgressBar
+                            android:id="@+id/xpProgress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:progress="60"
+                            android:progressDrawable="@drawable/xp_progress_drawable" />
+
+                        <TextView
+                            android:id="@+id/xpLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="150 XP / 200 XP"
+                            android:textSize="12sp"
+                            android:textColor="#555"
+                            android:gravity="end"
+                            android:fontFamily="@font/lato" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/activityCard"
                 android:layout_width="match_parent"
@@ -193,81 +270,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Блок уровня -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/xpCard"
-                android:layout_width="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp"
-                android:layout_gravity="center_horizontal"
-                android:backgroundTint="#FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/rankImageView"
-                        android:layout_width="58dp"
-                        android:layout_height="58dp"
-                        android:src="@drawable/cropped_image_1"
-                        android:layout_marginEnd="12dp"
-                        android:contentDescription="Ранг" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/userLevel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Уровень 3"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="#222"
-                            android:fontFamily="@font/lato_black" />
-
-                        <TextView
-                            android:id="@+id/userRank"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Активист"
-                            android:textSize="14sp"
-                            android:textColor="#777"
-                            android:fontFamily="@font/lato"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <ProgressBar
-                            android:id="@+id/xpProgress"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
-                            android:progress="60"
-                            android:progressDrawable="@drawable/xp_progress_drawable" />
-
-                        <TextView
-                            android:id="@+id/xpLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="150 XP / 200 XP"
-                            android:textSize="12sp"
-                            android:textColor="#555"
-                            android:gravity="end"
-                            android:fontFamily="@font/lato" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/knowledgeCard"
@@ -334,7 +336,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_height="wrap_content"
                 android:text="Тренироваться"
-                android:textColor="#000"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:fontFamily="@font/lato_black"
                 android:background="@drawable/rounded_button"

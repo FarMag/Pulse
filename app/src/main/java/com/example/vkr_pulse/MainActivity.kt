@@ -7,6 +7,7 @@ import android.widget.Button
 import android.animation.ObjectAnimator
 import android.graphics.drawable.LayerDrawable
 import android.widget.TextView
+import androidx.core.view.WindowCompat
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,9 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Находим элементы UI
-        val welcomeText: TextView = findViewById(R.id.welcomeText)
         val startButton: Button = findViewById(R.id.startButton)
-
         startButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)

@@ -380,19 +380,19 @@ class HomeFragment : Fragment() {
         })
     }
 
+    fun showToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_error_toast, null)
 
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
 
-    private fun showToast(message: String) {
-        requireActivity().runOnUiThread {
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        }
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
     }
-
-
-
-
-
-
 
 
 
@@ -1078,6 +1078,8 @@ class HomeFragment : Fragment() {
 //        progressPercentText.text = "Прогресс: ${progressPercent.toInt()} хахахаха%"
         weightLeftText.text = "Осталось: ${"%.1f".format(remaining)} кг"
     }
+
+
 
     data class LevelInfo(
         val level: Int,

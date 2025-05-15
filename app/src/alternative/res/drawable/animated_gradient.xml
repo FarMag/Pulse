@@ -2,7 +2,7 @@
     <item>
         <shape>
             <gradient
-                android:startColor="@color/blue"
+                android:startColor="@color/light_blue"
                 android:endColor="@color/white"
                 android:type="radial"
                 android:gradientRadius="150dp" />

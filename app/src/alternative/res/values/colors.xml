@@ -9,9 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF9E9E9E</color>
 <!--    <color name="yellow">#FFC107</color>-->
-    <color name="yellow">#FF9800</color>
+    <color name="yellow">#FF5722</color>
     <color name="radio_color">#FFC107</color>
     <color name="pink">#FF5722</color>
     <color name="green">#BBF246</color>
     <color name="blue">#00C8FF</color>
+    <color name="light_blue">#93E6FF</color>
+
 </resources>

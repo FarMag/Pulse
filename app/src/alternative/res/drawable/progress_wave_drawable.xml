@@ -3,7 +3,7 @@
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
             <corners android:radius="50dp"/>
-            <solid android:color="#F8F6E9"/> <!-- светло-зеленый фон -->
+            <solid android:color="#FFE7E0"/>
         </shape>
     </item>
 
@@ -14,8 +14,8 @@
                 <corners android:radius="50dp"/>
                 <gradient
                     android:angle="270"
-                    android:startColor="@color/yellow"
-                    android:endColor="#FF6363"
+                    android:startColor="@color/pink"
+                    android:endColor="#FF7549"
                     android:type="linear"/>
             </shape>
         </clip>

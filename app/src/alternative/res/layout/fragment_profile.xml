@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
     <!-- Прелоадер -->
     <ProgressBar
@@ -89,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="75 кг"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:textColor="#222"
                         android:textStyle="bold"/>
 
@@ -102,13 +101,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/weightText"
-                        android:text="Текущий вес"
-                        android:textSize="14sp"
-                        android:textColor="#888"/>
+
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -164,6 +157,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
+                        android:textColor="#FFFFFF"
                         android:background="@drawable/rounded_button"
                         android:backgroundTint="@color/pink"
                         android:text="Редактировать данные"
@@ -179,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_button"
                 android:text="Выйти"
-                android:textColor="#000"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/lato_black"
