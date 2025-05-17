@@ -1,6 +1,7 @@
 package com.example.vkr_pulse
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +12,32 @@ import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.vkr_pulse.data.FoodItem
 import com.example.vkr_pulse.ui.dialogs.AddProductDialogFragment
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
 class NutritionFragment : Fragment() {
 
+    private val client = OkHttpClient()
 
     private lateinit var caloriesLeftText: TextView
     private lateinit var caloriesEatenText: TextView
     private lateinit var caloriesGoalText: TextView
+
+    private lateinit var carbsText: TextView
+    private lateinit var proteinText: TextView
+    private lateinit var fatText: TextView
 
     private val breakfastItems = mutableListOf<FoodItemEntry>()
     private val lunchItems = mutableListOf<FoodItemEntry>()
@@ -30,8 +47,8 @@ class NutritionFragment : Fragment() {
     data class FoodItemEntry(val item: FoodItem, val grams: Int)
 
     private lateinit var calorieLottie: LottieAnimationView
-//    private lateinit var addCaloriesButton: Button
-    private var calorieGoal = 2200
+//    private var calorieGoal = 2200
+    private var calorieGoal = 0
     private var currentCalories = 0
     private val maxLottieProgress = 0.875f
 
@@ -47,7 +64,13 @@ class NutritionFragment : Fragment() {
     private var fatsMax = 0
 
     private var currentWater = 0  // в мл
-    private var waterGoal = 2000 // пример: рассчитывается из веса
+//    private var waterGoal = 2000 // пример: рассчитывается из веса
+    private var waterGoal = 0 // пример: рассчитывается из веса
+
+    private var totalKcal = 0f
+    private var totalProtein = 0f
+    private var totalFats = 0f
+    private var totalCarbs = 0f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -97,6 +120,10 @@ class NutritionFragment : Fragment() {
         caloriesEatenText = view.findViewById(R.id.caloriesEaten)
         caloriesGoalText = view.findViewById(R.id.caloriesGoal)
 
+        carbsText = view.findViewById(R.id.carbsText)
+        proteinText = view.findViewById(R.id.proteinText)
+        fatText = view.findViewById(R.id.fatText)
+
 
         waterAnimation = view.findViewById(R.id.waterAnimation)
         addWaterButton = view.findViewById(R.id.addWaterButton)
@@ -104,6 +131,10 @@ class NutritionFragment : Fragment() {
         percentText = view.findViewById(R.id.waterPercentageText)
         infoButton = view.findViewById(R.id.infoButton)
         foodinfoButton = view.findViewById(R.id.foodinfoButton)
+
+//        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+//        val accessToken = preferences.getString("access_jwt", null)
+//        getData(accessToken.toString())
 
 
         // Удалено сохранение/загрузка из SharedPreferences
@@ -161,11 +192,18 @@ class NutritionFragment : Fragment() {
 
         waterGoal = ((weightKg * 30).toInt()).coerceIn(1200, 4000)
 
-        updateWaterUI()
-        updateCaloriesUI()
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null)
+        getData(accessToken.toString())
+//        updateWaterUI()
+//        updateCaloriesUI()
 
         addWaterButton.setOnClickListener {
+            val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+            val accessToken = preferences.getString("access_jwt", null)
             currentWater += 250
+
+            addUserWater(accessToken.toString())
             updateWaterUI()
             playAnimationToCurrentProgress()
         }
@@ -193,43 +231,313 @@ class NutritionFragment : Fragment() {
         }
 
         calorieLottie = view.findViewById(R.id.calorieLottie)
-//        addCaloriesButton = view.findViewById(R.id.addCaloriesButton)
+    }
+
+    private fun getData(access_token: String) {
+//        val url_user = getString(R.string.url_auth) + "getUserDataAndAge"
+        val url_user = getString(R.string.url_auth) + "getUserData"
+        val url_nutrition = getString(R.string.url_nutrition) + "getNutritionData"
+        val url_progress = getString(R.string.url_progress) + "getUserWater"
+
+        val formBody = FormBody.Builder()
+            .add("access_token", access_token)
+            .build()
+
+        // Получаем данные пользователя
+        val requestUser = Request.Builder()
+            .url(url_user)
+            .post(formBody)
+            .build()
+
+        client.newCall(requestUser).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    showCustomErrorToast("Ошибка получения данных пользователя")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    handleUserResponse(it)
+                }
+            }
+
+            private fun handleUserResponse(response: Response) {
+                if (!response.isSuccessful) {
+                    handleErrorResponse(response.code)
+                    return
+                }
+
+                val responseData = response.body?.string()
+                requireActivity().runOnUiThread {
+                    try {
+                        val jsonResponse = JSONObject(responseData)
+                        updateUIWithUserData(jsonResponse)
+
+                        // После получения данных пользователя, получаем данные о питании
+//                        getNutritionData(access_token)
+                        getProgressData(access_token)
+                    } catch (e: JSONException) {
+                        showCustomErrorToast("Ошибка разбора данных пользователя")
+                    }
+                }
+            }
+
+            private fun getNutritionData(access_token: String) {
+                val formBodyNutrition = FormBody.Builder()
+                    .add("access_token", access_token)
+                    .build()
+
+                val requestNutrition = Request.Builder()
+                    .url(url_nutrition)
+                    .post(formBodyNutrition)
+                    .build()
+
+                client.newCall(requestNutrition).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        e.printStackTrace()
+                        requireActivity().runOnUiThread {
+                            showCustomErrorToast("Ошибка получения данных о питании")
+                        }
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        response.use {
+                            handleNutritionResponse(it)
+                        }
+                    }
+
+                    private fun handleNutritionResponse(response: Response) {
+                        if (!response.isSuccessful) {
+                            handleErrorResponse(response.code)
+                            return
+                        }
+
+                        val responseData = response.body?.string()
+                        requireActivity().runOnUiThread {
+                            try {
+                                val jsonResponse = JSONObject(responseData)
+                                updateUIWithNutritionData(jsonResponse)
+
+                                // После получения данных о питании, получаем данные о прогрессе
+//                                getProgressData(access_token)
+                            } catch (e: JSONException) {
+                                showCustomErrorToast("Ошибка разбора данных о питании")
+                            }
+                        }
+                    }
+                })
+            }
+
+            private fun getProgressData(access_token: String) {
+                val formBodyProgress = FormBody.Builder()
+                    .add("access_token", access_token)
+                    .build()
+
+                val requestProgress = Request.Builder()
+                    .url(url_progress)
+                    .post(formBodyProgress)
+                    .build()
+
+                client.newCall(requestProgress).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        e.printStackTrace()
+                        requireActivity().runOnUiThread {
+                            showCustomErrorToast("Ошибка получения данных о прогрессе")
+                        }
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        response.use {
+                            handleProgressResponse(it)
+                        }
+                    }
+
+                    private fun handleProgressResponse(response: Response) {
+                        if (!response.isSuccessful) {
+                            handleErrorResponse(response.code)
+                            return
+                        }
+
+                        val responseData = response.body?.string()
+                        requireActivity().runOnUiThread {
+                            try {
+                                val jsonResponse = JSONObject(responseData)
+                                updateWaterData(jsonResponse)
+
+                                getNutritionData(access_token)
+                            } catch (e: JSONException) {
+                                showCustomErrorToast("Ошибка разбора данных о прогрессе")
+                            }
+                        }
+                    }
+                })
+            }
+
+            private fun handleErrorResponse(code: Int) {
+                requireActivity().runOnUiThread {
+                    when (code) {
+                        400 -> showCustomErrorToast("Ошибка: ID не предоставлен")
+                        404 -> showCustomErrorToast("Ошибка: Пользователь не найден")
+                        500 -> showCustomErrorToast("Ошибка сервера, попробуйте позже")
+                        else -> showCustomErrorToast("Неизвестная ошибка")
+                    }
+                }
+            }
+        })
+    }
+
+    private fun addUserWater(access_token: String) {
+        val url = getString(R.string.url_progress) + "addUserWater"
+        val formBody = FormBody.Builder()
+            .add("access_token", access_token)
+            .add("current_water", currentWater.toString())
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(formBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    showCustomErrorToast("Ошибка получения данных")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    // Используем функцию handleResponse для обработки ответа
+                    handleResponse(response)
+                }
+            }
+
+            private fun handleResponse(response: Response) {
+                if (!response.isSuccessful) {
+                    handleErrorResponse(response.code)
+                    return
+                }
+
+                val responseData = response.body?.string()
+                requireActivity().runOnUiThread {
+                    try {
+                        val jsonResponse = JSONObject(responseData)
+                        // Обновляем пользовательский интерфейс с данными из jsonResponse
+                        // Здесь предполагается наличие полей в JSON. Убедитесь, что они соответствуют вашим данным.
+//                        updateUIWithData(jsonResponse)
+                    } catch (e: JSONException) {
+                        showCustomErrorToast("Ошибка разбора данных")
+                    }
+                }
+            }
+
+            private fun handleErrorResponse(code: Int) {
+                requireActivity().runOnUiThread {
+                    when (code) {
+                        400 -> showCustomErrorToast("Ошибка: ID не предоставлен")
+                        404 -> showCustomErrorToast("Ошибка: Пользователь не найден")
+                        500 -> showCustomErrorToast("Ошибка сервера, попробуйте позже")
+                        else -> showCustomErrorToast("Неизвестная ошибка")
+                    }
+                }
+            }
+        })
+    }
 
 
-//        addCaloriesButton.setOnClickListener {
-//            val previousPercent = (currentCalories.toFloat() / calorieGoal).coerceAtMost(1f)
-//            currentCalories += 200
-//            updateCaloriesUI()
-//            val currentPercent = (currentCalories.toFloat() / calorieGoal).coerceAtMost(1f)
+
+    private fun updateUIWithNutritionData(jsonData: JSONObject) {
+
+        view?.findViewById<ProgressBar>(R.id.profileLoading)?.visibility = View.GONE
+        view?.findViewById<ScrollView>(R.id.profileContent)?.visibility = View.VISIBLE
+
+        val calories = jsonData.getString("total_calories").toDouble().toInt()
+        val protein = jsonData.getString("total_protein").toDouble().toInt()
+        val fat = jsonData.getString("total_fat").toDouble().toInt()
+        val carbohydrates = jsonData.getString("total_carbohydrates").toDouble().toInt()
+
+//        caloriesEatenText.text = calories.toInt().toString()
+        caloriesEatenText.text = calories.toString()
+        proteinText.text = "${protein} / ${proteinMax} г"
+        fatText.text = "${fat} / ${fatsMax} г"
+        carbsText.text = "${carbohydrates} / ${carbsMax} г"
+
+
+        // Предполагаем, что jsonData - это объект типа JSONObject
+        val breakfast = jsonData.getJSONObject("breakfast")
+        val lunch = jsonData.getJSONObject("lunch")
+        val dinner = jsonData.getJSONObject("dinner")
+        val snack = jsonData.getJSONObject("snack")
+
+        val breakfastKcal = breakfast.getInt("calories")
+        val lunchKcal = lunch.getInt("calories")
+        val dinnerKcal = dinner.getInt("calories")
+        val snackKcal = snack.getInt("calories")
+
+
+
+        updateMealCalories(R.id.breakfastBlock, breakfastKcal)
+        updateMealCalories(R.id.lunchBlock, lunchKcal)
+        updateMealCalories(R.id.dinnerBlock, dinnerKcal)
+        updateMealCalories(R.id.snackBlock, snackKcal)
+
+
+//        val water = jsonData.getString("water")
 //
-//            playLottieCalorieAnimation(previousPercent, currentPercent)
-//        }
+//        private var totalKcal = 0f
+//        private var totalProtein = 0f
+//        private var totalFats = 0f
+//        private var totalCarbs = 0f
 
-//        val addCarbsButton = view.findViewById<Button>(R.id.addCarbsButton)
-//        val addProteinButton = view.findViewById<Button>(R.id.addProteinButton)
-//        val addFatButton = view.findViewById<Button>(R.id.addFatButton)
+        currentCalories = calories.toFloat().toInt()
+//        currentWater = water.toInt()
 
-//        addCarbsButton.setOnClickListener {
-//            eatenCarbs += 10
-//            val progress = eatenCarbs.coerceAtMost(nutrition.carbs)
-//            carbsProgress.progress = progress
-//            carbsText.text = "$progress / ${nutrition.carbs} г"
-//        }
-//
-//        addProteinButton.setOnClickListener {
-//            eatenProtein += 5
-//            val progress = eatenProtein.coerceAtMost(nutrition.protein)
-//            proteinProgress.progress = progress
-//            proteinText.text = "$progress / ${nutrition.protein} г"
-//        }
-//
-//        addFatButton.setOnClickListener {
-//            eatenFats += 5
-//            val progress = eatenFats.coerceAtMost(nutrition.fats)
-//            fatProgress.progress = progress
-//            fatText.text = "$progress / ${nutrition.fats} г"
-//        }
+        updateCaloriesUI()
+//        updateWaterUI()
 
+//        updateNutritionSummary()
+    }
+
+    private fun updateUIWithUserData(jsonData: JSONObject) {
+//        val gender = "male"
+//        val age = 22
+//        val weightKg = 93f
+//        val heightCm = 180f
+//        val activityLevel = "medium" // beginner, medium, athlete
+//        val goal = "mass" // mass, losing, keeping, longevity
+
+        val gender = jsonData.getString("gender")
+        val age = jsonData.getString("age").toInt()
+        val weightKg = jsonData.getString("weight").toFloat()
+        val heightCm = jsonData.getString("height").toFloat()
+        val activityLevel = jsonData.getString("phis_train")
+        val goal = jsonData.getString("target_phis")
+
+//        currentWater = jsonData.getString("water").toInt()
+//        updateWaterUI()
+
+        val nutrition = calculateNutrition(
+            gender = gender,
+            age = age,
+            weightKg = weightKg,
+            heightCm = heightCm,
+            activityLevel = activityLevel,
+            goal = goal
+        )
+        calorieGoal = nutrition.calories
+        carbsMax = nutrition.carbs
+        proteinMax = nutrition.protein
+        fatsMax = nutrition.fats
+
+        waterGoal = ((weightKg * 30).toInt()).coerceIn(1200, 4000)
+    }
+
+    private fun updateWaterData(jsonData: JSONObject) {
+        currentWater = jsonData.getString("water").toFloat().toInt()
+        updateWaterUI()
     }
 
     private fun updateWaterUI() {
@@ -345,10 +653,10 @@ class NutritionFragment : Fragment() {
     private fun updateNutritionSummary() {
         val allItems = breakfastItems + lunchItems + dinnerItems + snackItems
 
-        var totalKcal = 0f
-        var totalProtein = 0f
-        var totalFats = 0f
-        var totalCarbs = 0f
+//        var totalKcal = 0f
+//        var totalProtein = 0f
+//        var totalFats = 0f
+//        var totalCarbs = 0f
 
         for (entry in allItems) {
             val factor = entry.grams / 100f
@@ -393,6 +701,34 @@ class NutritionFragment : Fragment() {
         return list.fold(0f) { acc, entry ->
             acc + entry.item.calories * (entry.grams / 100f)
         }.toInt()
+    }
+
+    fun showCustomSuccessToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_success_toast, null)
+
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
+    }
+
+    fun showCustomErrorToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.layout_error_toast, null)
+
+        val toastText = layout.findViewById<TextView>(R.id.toastText)
+        toastText.text = message
+
+        val toast = Toast(requireContext().applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
+        toast.show()
     }
 
 // Класс-результат

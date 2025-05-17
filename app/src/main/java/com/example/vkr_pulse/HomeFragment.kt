@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
     private lateinit var progressPercentText: TextView
     private lateinit var weightLeftText: TextView
     private lateinit var rankImageView: ImageView
+    private lateinit var caloriesText: TextView
 
     private lateinit var phrases: Array<String>
     private var currentPhraseIndex = 0
@@ -66,6 +67,9 @@ class HomeFragment : Fragment() {
     private var currentTotalXp: Int = 0
     private var targetWeight: Double = 0.0
     private var currentWeight: Float = 0F
+
+    private var currentKkal: Int = 0
+    private var goalKkal: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -117,7 +121,7 @@ class HomeFragment : Fragment() {
         val caloriesTarget = 1800
         val percentage = (caloriesConsumed.toFloat() / caloriesTarget * 100).toInt().coerceAtMost(100)
 
-        val caloriesText = view.findViewById<TextView>(R.id.caloriesText)
+        caloriesText = view.findViewById<TextView>(R.id.caloriesText)
         val progressBar = view.findViewById<ProgressBar>(R.id.caloriesProgressBar)
         caloriesText.text = "$caloriesConsumed / $caloriesTarget ккал"
         progressBar.progress = percentage
@@ -188,7 +192,7 @@ class HomeFragment : Fragment() {
 
 
     private fun fetchUserData(accessToken: String) {
-        val urlAddresses = listOf("auth", "progress")
+        val urlAddresses = listOf("auth", "progress", "nutrition")
 
         val client = OkHttpClient()
 
@@ -196,6 +200,7 @@ class HomeFragment : Fragment() {
             val url = when (urlAddress) {
                 "progress" -> getString(R.string.url_progress) + "userProgress"
                 "auth" -> getString(R.string.url_auth) + "getUserData"
+                "nutrition" -> getString(R.string.url_nutrition) + "getNutritionData"
                 else -> throw IllegalArgumentException("Неизвестный адрес URL: $urlAddress")
             }
 //            val url = when (urlAddress) {
@@ -238,6 +243,7 @@ class HomeFragment : Fragment() {
                             when (urlAddress) {
                                 "progress" -> parseProgressData(jsonResponse)
                                 "auth" -> parseUserData(jsonResponse)
+                                "nutrition" -> ParseNutritionData(jsonResponse)
                             }
 //                            when (urlAddress) {
 //                                "auth" -> parseUserData(jsonResponse)
@@ -488,8 +494,22 @@ class HomeFragment : Fragment() {
 
 
 
+        val gender = jsonData.getString("gender")
+        val height = jsonData.getString("height")
+        val phis_train = jsonData.getString("phis_train")
+        val age = jsonData.getString("age")
 
+        val nutrition = calculateNutrition(
+            gender = gender,
+            age = age.toInt(),
+            weightKg = weight.toFloat(),
+            heightCm = height.toFloat(),
+            activityLevel = phis_train,
+            goal = targetPhis
+        )
+        goalKkal = nutrition.calories.toInt()
 
+        caloriesText.text = "$currentKkal / $goalKkal ккал"
 
 
 
@@ -601,15 +621,15 @@ class HomeFragment : Fragment() {
             description.isEnabled = false
             axisRight.isEnabled = false
             setTouchEnabled(false)
-            setScaleEnabled(false) // 🔒 запрещаем масштаб
-            setExtraBottomOffset(14f) // ⬇️ фикс отступ снизу
+            setScaleEnabled(false)
+            setExtraBottomOffset(14f)
 
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawGridLines(false)
                 labelRotationAngle = -30f
                 granularity = 1f
-                textSize = 11f // 🔤 чтобы не обрезалось
+                textSize = 11f
                 valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
             }
 
@@ -632,6 +652,16 @@ class HomeFragment : Fragment() {
             view?.findViewById<ScrollView>(R.id.mainContent)?.visibility = View.VISIBLE
             view?.findViewById<ProgressBar>(R.id.loadingIndicator)?.visibility = View.GONE
         }
+    }
+
+    private fun ParseNutritionData(jsonData: JSONObject) {
+        view?.findViewById<ProgressBar>(R.id.profileLoading)?.visibility = View.GONE
+        view?.findViewById<ScrollView>(R.id.profileContent)?.visibility = View.VISIBLE
+
+        val calories = jsonData.getString("total_calories").toDouble().toInt()
+
+        currentKkal = calories.toFloat().toInt()
+        caloriesText.text = "$currentKkal / $goalKkal ккал"
     }
 
     data class ProgressData(val date: String, val weight: Float) // Класс для хранения данных о прогрессе
@@ -1079,7 +1109,44 @@ class HomeFragment : Fragment() {
         weightLeftText.text = "Осталось: ${"%.1f".format(remaining)} кг"
     }
 
+    private fun calculateNutrition(
+        weightKg: Float,
+        heightCm: Float,
+        age: Int,
+        gender: String,
+        activityLevel: String,
+        goal: String
+    ): NutritionResult {
+        // BMR по формуле Mifflin-St Jeor
+        val bmr = if (gender.lowercase() == "male") {
+            10 * weightKg + 6.25f * heightCm - 5 * age + 5
+        } else {
+            10 * weightKg + 6.25f * heightCm - 5 * age - 161
+        }
 
+        // Активность
+        val activityMultiplier = when (activityLevel) {
+            "beginner" -> 1.375f
+            "medium" -> 1.55f
+            "athlete" -> 1.725f
+            else -> 1.375f
+        }
+        val tdee = bmr * activityMultiplier
+
+        // Цель
+        val calories = when (goal) {
+            "losing" -> tdee * 0.80f
+            "mass" -> tdee * 1.15f
+            "keeping", "longevity" -> tdee
+            else -> tdee
+        }
+
+        // Возвращаем объект NutritionResult с рассчитанными калориями
+        return NutritionResult(calories)
+    }
+
+
+    data class NutritionResult(val calories: Float)
 
     data class LevelInfo(
         val level: Int,
