@@ -49,6 +49,7 @@ CREATE TABLE nutrition_logs (
     protein DECIMAL(5, 2),
     fat DECIMAL(5, 2),
     carbohydrates DECIMAL(5, 2),
+    grams DECIMAL(5, 2),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
