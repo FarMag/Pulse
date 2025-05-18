@@ -1,4 +1,4 @@
-INSERT INTO products (product_name, calories, protein, fat, carbohydrates) VALUES
+INSERT INTO recipes (name, calories, protein, fat, carbohydrates) VALUES
             ('Авокадо', 160, 2.0, 14.66, 1.83),
             ('Авокадо, Калифорнийские, сырые', 167, 1.96, 15.41, 1.84),
             ('Авокадо, Флоридские, сырые', 120, 2.23, 10.06, 2.22),
