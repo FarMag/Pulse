@@ -129,7 +129,7 @@ def show_product_data():
         try:
             search_name_product = request.form.get('search_name_product', "")
 
-            products = db.session.query(Recipes).filter(Recipes.name.like(f"%{search_name_product}%")).limit(10).all()
+            products = db.session.query(Recipes).filter(Recipes.name.like(f"%{search_name_product}%")).limit(20).all()
             product_list = [recipes_log_to_dict(product) for product in products]
 
             response = jsonify(product_list)
