@@ -23,7 +23,7 @@ CREATE TABLE progress_logs (
     body_fat_percentage DECIMAL(10, 2),
     steps INT,
     calories_burned DECIMAL(6, 2),
-    water DECIMAL(5, 2),
+    water DECIMAL(6, 2),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
