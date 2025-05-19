@@ -28,4 +28,9 @@
         android:id="@+id/recipesFragment"
         android:name="com.example.vkr_pulse.RecipesFragment"
         android:label="Рецепты" />
+
+    <fragment
+        android:id="@+id/trainingPlansFragment"
+        android:name="com.example.vkr_pulse.TrainingPlansFragment"
+        android:label="Тренировочные планы"/>
 </navigation>

@@ -60,8 +60,9 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+<!--            блок тренировочных планов-->
             <androidx.cardview.widget.CardView
-                android:id="@+id/PhraseCard"
+                android:id="@+id/trainingPlansCard"
                 android:layout_width="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -70,36 +71,73 @@
                 android:layout_gravity="center_horizontal"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="6dp"
-                android:backgroundTint="#FFFFFF">
-
-
+                android:backgroundTint="#FFFFFF"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="110dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="20dp">
 
-                    <TextView
-                        android:text="Твоя последняя тренировка"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="#000"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"/>
+                    <!-- Иконка или картинка (замени на свою, если нужно) -->
+                    <ImageView
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:src="@drawable/ic_run"
+                    android:background="@drawable/bg_circle_accent"
+                    android:padding="10dp"
+                    android:tint="#FFFFFF"
+                    android:contentDescription="Тренировочные планы"
+                    android:elevation="2dp"
+                    />
 
-                    <TextView
-                        android:id="@+id/lastWorkoutName"
-                        android:text="Силовая на всё тело — 25 мин"
-                        android:textSize="14sp"
-                        android:textColor="#666"
-                        android:layout_marginTop="4dp"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"/>
+                    <!-- Текстовый блок -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="18dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/trainingPlansTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Тренировочные планы"
+                            android:textSize="19sp"
+                            android:textColor="#101820"
+                            android:fontFamily="@font/lato_black" />
+
+                        <TextView
+                            android:id="@+id/trainingPlansSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Подобранные программы под твои цели"
+                            android:textSize="15sp"
+                            android:textColor="#73818C"
+                            android:fontFamily="@font/lato"
+                            android:layout_marginTop="4dp"/>
+
+                    </LinearLayout>
+
+                    <!-- Chevron (стрелка) -->
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_arrow_right"
+                        android:contentDescription="Открыть"
+                        android:tint="#B1B7C0"
+                        />
+
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
+<!--        блок активности-->
             <androidx.cardview.widget.CardView
                 android:id="@+id/activitySummaryCard"
                 android:layout_width="match_parent"
@@ -115,19 +153,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="16dp">
 
                     <!-- Заголовок -->
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Активность сегодня"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#222"
-                        android:fontFamily="@font/lato_black"
-                        android:layout_gravity="start"
+                        android:textColor="#000"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
                         android:layout_marginBottom="12dp"/>
+
 
                     <!-- Секции с ккал, шагами и временем -->
                     <LinearLayout

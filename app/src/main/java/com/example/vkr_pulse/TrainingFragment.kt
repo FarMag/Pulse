@@ -19,6 +19,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Locale
+import androidx.navigation.fragment.findNavController
 
 class TrainingFragment : Fragment() {
 
@@ -44,6 +45,13 @@ class TrainingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val trainingPlansCard = view.findViewById<CardView>(R.id.trainingPlansCard)
+        trainingPlansCard.setOnClickListener {
+            findNavController().navigate(R.id.trainingPlansFragment)
+        }
+
 
         phraseTextView = view.findViewById(R.id.phraseTextView)
         val card = view.findViewById<CardView>(R.id.knowledgeCard)
@@ -94,6 +102,8 @@ class TrainingFragment : Fragment() {
                 calendarView.scrollToMonth(it.yearMonth.plusMonths(1))
             }
         }
+
+
 
         calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)

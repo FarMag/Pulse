@@ -70,11 +70,6 @@ class NutritionFragment : Fragment() {
 //    private var waterGoal = 2000 // пример: рассчитывается из веса
     private var waterGoal = 0 // пример: рассчитывается из веса
 
-    private var totalKcal = 0f
-    private var totalProtein = 0f
-    private var totalFats = 0f
-    private var totalCarbs = 0f
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_rounded"
+    android:paddingTop="0dp"
+    android:paddingBottom="16dp"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    >
+
+    <!-- Тонкая широкая фотополоса -->
+    <ImageView
+        android:id="@+id/recipeDialogImage"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Фото блюда"
+        android:background="@drawable/bg_top_rounded"
+        />
+
+    <!-- Контейнер для контента -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:id="@+id/recipeDialogName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Название блюда"
+            android:textSize="19sp"
+            android:textColor="#1B2029"
+            android:fontFamily="@font/lato_black"
+            android:layout_marginTop="4dp"
+            />
+
+        <TextView
+            android:id="@+id/recipeDialogKcal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ккал: 100 | Б: 10 | Ж: 3 | У: 18"
+            android:textSize="15sp"
+            android:textColor="#6C7589"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/lato"
+            />
+
+        <TextView
+            android:id="@+id/recipeDialogDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Краткое описание блюда — польза и вкус."
+            android:textSize="15sp"
+            android:textColor="#5C5C5C"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/lato"
+            />
+
+        <TextView
+            android:id="@+id/recipeDialogRecipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Рецепт: шаг 1, шаг 2, шаг 3..."
+            android:textSize="15sp"
+            android:textColor="#3C3C3C"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/lato"
+            />
+
+        <Button
+            android:id="@+id/closeDialogButton"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:text="Закрыть"
+            android:textColor="@color/blue"
+            android:background="@drawable/bg_button_secondary"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="2dp"
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_black"
+            />
+    </LinearLayout>
+
+</LinearLayout>

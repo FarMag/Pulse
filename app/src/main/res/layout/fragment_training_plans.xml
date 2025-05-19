@@ -1,0 +1,99 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trainingPlansRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="6dp">
+
+        <TextView
+            android:id="@+id/recipesTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Тренировочные планы"
+            android:textSize="20sp"
+            android:textColor="#212325"
+            android:fontFamily="@font/lato_black"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            />
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_close"
+            android:tint="#949BB7"
+            android:padding="9dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="Закрыть"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/planButtonsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp">
+
+        <Button
+            android:id="@+id/btnRecommended"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Для меня"
+            android:textSize="14sp"
+            android:background="@drawable/bg_button_primary"
+            android:textColor="@color/white"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnAll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Все"
+            android:textSize="14sp"
+            android:background="@drawable/bg_button_secondary"
+            android:textColor="@color/blue"/>
+    </LinearLayout>
+
+    <!-- Content Scroll -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/planButtonsLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/trainingPlansContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
