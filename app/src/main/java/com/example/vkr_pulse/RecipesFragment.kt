@@ -56,7 +56,7 @@ class RecipesFragment : Fragment() {
             .build()
 
         val request = Request.Builder()
-            .url("http://192.168.0.19:8005/api/showProductData")
+            .url("http://192.168.0.19:8005/api/showProductDataGoal")
             .post(formBody)
             .build()
 
