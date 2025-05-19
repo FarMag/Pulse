@@ -1,0 +1,62 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="6dp"
+    android:layout_marginStart="14dp"
+    android:layout_marginEnd="14dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="7dp"
+    android:backgroundTint="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="14dp">
+
+        <!-- Фото заглушка (по желанию) -->
+        <ImageView
+            android:id="@+id/recipeImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/food"
+            android:background="@drawable/bg_image_rounded"
+            android:contentDescription="Фото блюда"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="18dp">
+
+            <TextView
+                android:id="@+id/recipeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Название продукта"
+                android:textSize="17sp"
+                android:textColor="#181F2C"
+                android:fontFamily="@font/lato_black"
+                />
+
+            <!-- КЖБУ -->
+            <TextView
+                android:id="@+id/recipeInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ккал: 110 | Б: 6 | Ж: 2 | У: 50"
+                android:textSize="15sp"
+                android:textColor="#6C7589"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/lato"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

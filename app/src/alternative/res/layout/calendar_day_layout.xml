@@ -25,11 +25,11 @@
     <!-- Иконка гантели — фиксированно внизу и по центру -->
     <ImageView
         android:id="@+id/workoutIcon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_dumbbell"
+        android:tint="@color/blue"
+        android:src="@drawable/ic_point"
         android:visibility="gone" />
 
 </FrameLayout>

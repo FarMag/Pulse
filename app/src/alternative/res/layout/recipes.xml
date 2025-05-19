@@ -1,0 +1,77 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recipesCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:backgroundTint="@android:color/white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="20dp">
+
+        <!-- Иконка -->
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/ic_menu_book"
+            android:background="@drawable/bg_circle_accent"
+            android:padding="10dp"
+            android:tint="#FFFFFF"
+            android:contentDescription="Рецепты"
+            android:elevation="2dp"
+            />
+
+        <!-- Текстовый блок -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="18dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/recipesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Рецепты для твоей цели"
+                android:textSize="19sp"
+                android:textColor="#101820"
+                android:fontFamily="@font/lato_black"
+                />
+
+            <TextView
+                android:id="@+id/recipesSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Быстрые и вкусные блюда под твой план питания"
+                android:textSize="15sp"
+                android:textColor="#73818C"
+                android:fontFamily="@font/lato"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <!-- Chevron (стрелка) -->
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Открыть"
+            android:tint="#B1B7C0"
+            />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

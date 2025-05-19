@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
     private lateinit var weightLeftText: TextView
     private lateinit var rankImageView: ImageView
     private lateinit var caloriesText: TextView
+    private lateinit var caloriesProgressBar: ProgressBar
 
     private lateinit var phrases: Array<String>
     private var currentPhraseIndex = 0
@@ -83,6 +84,9 @@ class HomeFragment : Fragment() {
 
         val mainContent = view.findViewById<ScrollView>(R.id.mainContent)
         val loadingIndicator = view.findViewById<ProgressBar>(R.id.loadingIndicator)
+
+        caloriesText = view.findViewById<TextView>(R.id.caloriesText)
+        caloriesProgressBar = view.findViewById<ProgressBar>(R.id.caloriesProgressBar)
 
         mainContent.visibility = View.GONE
         loadingIndicator.visibility = View.VISIBLE
@@ -116,16 +120,6 @@ class HomeFragment : Fragment() {
 //        startPhraseRotation()
 //        setupProgressChart()
 
-        //отмечаем калории, надо будет брать их бд
-        val caloriesConsumed = 1000
-        val caloriesTarget = 1800
-        val percentage = (caloriesConsumed.toFloat() / caloriesTarget * 100).toInt().coerceAtMost(100)
-
-        caloriesText = view.findViewById<TextView>(R.id.caloriesText)
-        val progressBar = view.findViewById<ProgressBar>(R.id.caloriesProgressBar)
-        caloriesText.text = "$caloriesConsumed / $caloriesTarget ккал"
-        progressBar.progress = percentage
-
         //шаги и прогрессбар для них
         val stepsDone = 3400      // получай из БД или часов
         val stepsGoal = 7500      // пользовательская цель
@@ -136,7 +130,6 @@ class HomeFragment : Fragment() {
 
         stepsText.text = "$stepsDone / $stepsGoal шагов"
         stepsProgressBar.progress = stepsPercentage
-
 
 //        // Кнопка теста добавления XP (временно, для проверки анимации и звука)
 //        val testXpButton = view.findViewById<Button>(R.id.testXpButton)
@@ -175,12 +168,13 @@ class HomeFragment : Fragment() {
             }
 
             confirmButton.setOnClickListener {
-                //здесь будет очистка истории веса
-                resetWeight(accessToken.toString())
-                fetchUserData(accessToken.toString())
-                dialog.dismiss()
-                showCustomToast("История веса очищена")
+                resetWeight(accessToken.toString()) {
+                    fetchUserData(accessToken.toString())
+                    showCustomToast("История веса очищена")
+                    dialog.dismiss()
+                }
             }
+
 
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
             dialog.show()
@@ -329,7 +323,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun resetWeight(accessToken: String) {
+    private fun resetWeight(accessToken: String, onSuccess: () -> Unit) {
         val url = getString(R.string.url_progress) + "resetWeight"
 
         val client = OkHttpClient()
@@ -351,40 +345,19 @@ class HomeFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
-                    handleResponse(response)
-                }
-            }
-
-            private fun handleResponse(response: Response) {
-                if (!response.isSuccessful) {
-                    handleErrorResponse(response.code)
-                    return
-                }
-
-                val responseData = response.body?.string()
-                if (responseData != null) {
-                    try {
-                        val jsonResponse = JSONObject(responseData)
-//                        parseProgressData(jsonResponse)
-                    } catch (e: JSONException) {
-                        showToast("Ошибка разбора данных")
+                    if (!response.isSuccessful) {
+                        // ...твой error handler...
+                        return
                     }
-                } else {
-                    showToast("Пустой ответ от сервера")
+                    // Только по успеху:
+                    requireActivity().runOnUiThread {
+                        onSuccess() // тут вызывается fetchUserData!
+                    }
                 }
-            }
-
-            private fun handleErrorResponse(code: Int) {
-                val errorMessage = when (code) {
-                    400 -> "Ошибка: ID не предоставлен"
-                    404 -> "Ошибка: Пользователь не найден"
-                    500 -> "Ошибка сервера, попробуйте позже"
-                    else -> "Неизвестная ошибка: $code"
-                }
-                showToast(errorMessage)
             }
         })
     }
+
 
     fun showToast(message: String) {
         val inflater = layoutInflater
@@ -401,80 +374,6 @@ class HomeFragment : Fragment() {
     }
 
 
-
-
-
-//    private fun fetchUserData(access_token: String) {
-//        val url = getString(R.string.url_auth) + "getUserData"
-//
-//        val client = OkHttpClient()
-////        val request = VoiceInteractor.Request.Builder().url(url).build()
-//
-//        val formBody = FormBody.Builder()
-//            .add("access_token", access_token)
-//            .build()
-//
-//        val request = Request.Builder()
-//            .url(url)
-//            .post(formBody)
-//            .build()
-//
-//        client.newCall(request).enqueue(object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                e.printStackTrace()
-//                requireActivity().runOnUiThread {
-//                    Toast.makeText(requireContext(), "Ошибка получения данных", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                response.use {
-//                    // Используем функцию handleResponse для обработки ответа
-//                    handleResponse(response)
-//                }
-//            }
-//
-//            private fun handleResponse(response: Response) {
-//                if (!response.isSuccessful) {
-//                    handleErrorResponse(response.code)
-//                    return
-//                }
-//
-//                val responseData = response.body?.string()
-//                if (responseData != null) {
-//                    try {
-//                        val jsonResponse = JSONObject(responseData)
-//                        parseUserData(jsonResponse)
-//                    } catch (e: JSONException) {
-//                        Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
-//                    }
-//                } else {
-//                    Toast.makeText(requireContext(), "Пустой ответ от сервера", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            private fun handleErrorResponse(code: Int) {
-//                requireActivity().runOnUiThread {
-//                    when (code) {
-//                        400 -> Toast.makeText(requireContext(), "Ошибка: ID не предоставлен", Toast.LENGTH_SHORT).show()
-//                        404 -> Toast.makeText(requireContext(), "Ошибка: Пользователь не найден", Toast.LENGTH_SHORT).show()
-//                        500 -> Toast.makeText(requireContext(), "Ошибка сервера, попробуйте позже", Toast.LENGTH_SHORT).show()
-//                        else -> Toast.makeText(requireContext(), "Неизвестная ошибка: $code", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//        })
-//    }
-
-//    private fun parseUserData(jsonData: String) {
-//        val jsonObject = JSONObject(jsonData)
-//        val userName = jsonObject.getString("username")
-////        val level = jsonObject.getInt("level")
-////        val currentXp = jsonObject.getInt("currentXp")
-////        val maxXp = jsonObject.getInt("maxXp")
-////        val title = jsonObject.getString("title")
-//        val weight = jsonObject.getDouble("weight")
-//        val targetWeight = jsonObject.getDouble("target_weight")
 
     private fun parseUserData(jsonData: JSONObject){
 //        val jsonObject = JSONObject(jsonData)
@@ -513,43 +412,6 @@ class HomeFragment : Fragment() {
 
 
 
-
-
-//        greetingText.text = "За работу, $userName 💪"
-////            updateXpUI(level, currentXp, maxXp, title)
-//        weightText.text = "Текущий вес: ${String.format("%.0f", weight.toFloat())} кг"
-////            weightText.text = weight.toString()
-//        goalWeightText.text = "Цель: ${String.format("%.0f", targetWeight.toFloat())} кг"
-//
-////            goalWeightText.text = targetWeight.toString()
-//
-////            val (level, currentXp, maxXp, title) = getLevelInfo(currentXp)
-//
-//        val startWeight = weight.toFloat()
-//        currentWeight = weight.toFloat()
-//
-//        val delta = (targetWeight - startWeight).toFloat()
-//        val progressDelta = currentWeight - startWeight
-//        val progressPercent = if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
-//        val remaining = kotlin.math.abs(currentWeight - targetWeight)
-//
-////            progressPercentText.text = "Прогресс: ${progressPercent.toInt()}%"
-//        weightLeftText.text = "Осталось: ${"%.0f".format(remaining)} кг"
-//
-//        val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
-//        updateXpUI(level, currentXp, maxXp, title)
-//
-//        startPhraseRotation(targetPhis)
-
-
-
-
-
-
-
-
-
-//        currentWeight = weight.toFloat()
 
         // Обновляем UI с полученными данными
         requireActivity().runOnUiThread {
@@ -659,10 +521,16 @@ class HomeFragment : Fragment() {
         view?.findViewById<ScrollView>(R.id.profileContent)?.visibility = View.VISIBLE
 
         val calories = jsonData.getString("total_calories").toDouble().toInt()
+        currentKkal = calories
 
-        currentKkal = calories.toFloat().toInt()
-        caloriesText.text = "$currentKkal / $goalKkal ккал"
+        val percentage = if (goalKkal > 0) (currentKkal.toFloat() / goalKkal * 100).toInt().coerceAtMost(100) else 0
+
+        requireActivity().runOnUiThread {
+            caloriesProgressBar.progress = percentage
+            caloriesText.text = "$currentKkal / $goalKkal ккал"
+        }
     }
+
 
     data class ProgressData(val date: String, val weight: Float) // Класс для хранения данных о прогрессе
 
@@ -686,131 +554,6 @@ class HomeFragment : Fragment() {
         handler.removeCallbacks(phraseRunnable)
     }
 
-//    private fun loadPhrases() {
-//        phrases = listOf( //временные фразы для проверки - надо их удалить
-//            "Регулярные тренировки замедляют процессы старения клеток.",
-//            "30 минут активности в день снижают риск инфаркта на 50%.",
-//            "Силовые тренировки увеличивают плотность костной ткани.",
-//        )
-//
-//        val muscleGainPhrases = listOf( //набор массы
-//            "Гипертрофия мышц запускается при 60–80% от 1ПМ нагрузки.",
-//            "Для роста мышц важен прогрессивный перегруз — увеличивай вес или повторения.",
-//            "Сон менее 6 часов снижает уровень тестостерона и замедляет рост мышц.",
-//            "Белок после тренировки ускоряет мышечное восстановление и рост.",
-//            "Для набора массы нужно потреблять больше калорий, чем тратишь.",
-//            "Мышцы растут не на тренировке, а во время отдыха.",
-//            "Оптимальная частота тренировок — 2–3 раза в неделю на каждую группу мышц.",
-//            "Силовые упражнения активируют анаболические гормоны, включая IGF-1 и тестостерон.",
-//            "20–30 г белка в один приём пищи — максимум, который эффективно усваивается.",
-//            "Тренировки до отказа стимулируют большее мышечное напряжение.",
-//            "Комплексные упражнения (присед, жим, тяга) лучше всего запускают рост мышц.",
-//            "Креатин моногидрат — самый изученный и эффективный натуральный добавочный стимулятор силы.",
-//            "Гормон роста повышается во сне — не пренебрегай качественным отдыхом.",
-//            "Омега-3 улучшает чувствительность к инсулину и ускоряет восстановление.",
-//            "Недостаток углеводов — причина низкой энергии и замедленного роста мышц.",
-//            "Растущая нагрузка — ключ к длительному прогрессу.",
-//            "Слишком частые тренировки без восстановления могут привести к катаболизму.",
-//            "BCAA помогают защитить мышцы во время интенсивных нагрузок.",
-//            "Тестостерон — главный гормон роста мышц, и его уровень можно поддерживать естественно.",
-//            "Отказ от алкоголя улучшает синтез белка и повышает силу."
-//        )
-//
-//        val fatLossPhrases = listOf( //похудение
-//            "Дефицит калорий — главный фактор снижения веса.",
-//            "Сон менее 6 часов нарушает регуляцию гормонов голода — лептина и грелина.",
-//            "Силовые тренировки сохраняют мышечную массу во время похудения.",
-//            "Углеводы не враги — главное контролировать общее потребление калорий.",
-//            "Кардио усиливает сжигание жира, особенно в сочетании с силовыми.",
-//            "Высокобелковая диета помогает сохранить мышечную массу при дефиците калорий.",
-//            "Нерегулярное питание увеличивает риск переедания.",
-//            "Питьевая вода перед приёмами пищи снижает аппетит.",
-//            "Хронический стресс повышает уровень кортизола и способствует накоплению жира.",
-//            "Еда с высоким гликемическим индексом может усиливать чувство голода.",
-//            "Дефицит железа и витамина D может замедлить метаболизм.",
-//            "Интервальное голодание может помочь создать дефицит калорий, но не работает без контроля рациона.",
-//            "Наблюдение за прогрессом повышает мотивацию и уменьшает вероятность срывов.",
-//            "Слишком резкое снижение калорий замедляет обмен веществ.",
-//            "Ночные перекусы тормозят жиросжигание и ухудшают сон.",
-//            "Потеря веса без физической активности может привести к потере мышц.",
-//            "Минимум 7000 шагов в день помогает ускорить сжигание жира.",
-//            "Рацион с низким содержанием обработанных продуктов снижает тягу к еде.",
-//            "Регулярный приём пищи стабилизирует уровень сахара и снижает риск переедания.",
-//            "Потеря 0.5–1 кг в неделю — здоровый и устойчивый темп."
-//        )
-//
-//        val maintenancePhrases = listOf( //поддержание формы
-//            "Регулярная активность снижает риск диабета 2 типа на 30–50%.",
-//            "Поддержание формы — это стабильность, а не жёсткие диеты и марафоны.",
-//            "Достаточная физическая нагрузка помогает регулировать артериальное давление.",
-//            "30 минут умеренной активности в день поддерживают здоровье сердца и сосудов.",
-//            "Силовые упражнения 2 раза в неделю помогают сохранить мышечную массу с возрастом.",
-//            "Правильное питание стабилизирует уровень энергии и настроение.",
-//            "Хорошая форма — результат системности, а не идеальности.",
-//            "Физическая активность улучшает качество сна и бодрость днём.",
-//            "Баланс белков, жиров и углеводов важен даже при поддержании веса.",
-//            "Регулярные прогулки снижают уровень тревожности и улучшают настроение.",
-//            "Физическая форма напрямую влияет на работоспособность и концентрацию.",
-//            "Гибкость и мобильность суставов важны не меньше силы и выносливости.",
-//            "Стабильный вес снижает нагрузку на суставы и позвоночник.",
-//            "Поддержание формы снижает риск возрастных заболеваний.",
-//            "Рацион с достаточным количеством клетчатки улучшает пищеварение и снижает аппетит.",
-//            "Даже 15 минут растяжки в день улучшают самочувствие.",
-//            "Сохранять форму проще, чем возвращать её после перерыва.",
-//            "Физическая активность укрепляет иммунитет и улучшает восстановление после болезней.",
-//            "Контроль порций помогает держать вес без строгих ограничений.",
-//            "Регулярный режим сна и бодрствования способствует стабильному обмену веществ."
-//        )
-//
-//        val longevityPhrases = listOf( //спортивное долголение
-//            "Силовые тренировки после 50 помогают сохранить плотность костей и предотвратить остеопороз.",
-//            "Регулярные упражнения снижают риск болезней сердца на 40–50%.",
-//            "Физическая активность уменьшает возрастное снижение когнитивных функций.",
-//            "Даже лёгкие тренировки 3 раза в неделю улучшают баланс и координацию.",
-//            "Потеря мышечной массы начинается после 40 лет — движение сохраняет силу.",
-//            "Силовые и аэробные тренировки помогают контролировать уровень сахара и инсулин.",
-//            "Упражнения с собственным весом защищают суставы и развивают выносливость.",
-//            "Физическая активность снижает риск падений на 30% у людей старше 65 лет.",
-//            "Поддержание массы мышц связано с более долгой и здоровой жизнью.",
-//            "Даже 20 минут ходьбы в день продлевают жизнь и снижают воспалительные процессы.",
-//            "Растяжка и дыхательные упражнения улучшают подвижность и насыщение тканей кислородом.",
-//            "Сон, питание и движение — три столпа долголетия.",
-//            "Умеренная активность повышает уровень «хорошего» холестерина (ЛПВП).",
-//            "Сильные мышцы облегчают повседневную жизнь — от подъёма с кресла до прогулки.",
-//            "Здоровая активность снижает риск деменции на 30–40%.",
-//            "Возраст — не преграда: тело адаптируется к тренировкам в любом возрасте.",
-//            "Физически активные люди старше 60 реже страдают депрессией и тревожностью.",
-//            "Медленное старение — результат регулярных тренировок, а не генетики.",
-//            "Поддержание физической формы помогает сохранить независимость в пожилом возрасте.",
-//            "Тренировки улучшают работу митохондрий — источников энергии в каждой клетке."
-//        )
-//
-//    }
-
-//    private fun startPhraseRotation(phraseType: String) {
-//        phraseRunnable = object : Runnable {
-//            override fun run() {
-//                phraseTextView.animate()
-//                    .alpha(0f)
-//                    .translationY(20f)
-//                    .setDuration(300)
-//                    .withEndAction {
-//                        phraseTextView.text = phrases[currentPhraseIndex]
-//                        phraseTextView.translationY = 20f
-//                        phraseTextView.alpha = 0f
-//                        phraseTextView.animate()
-//                            .alpha(1f)
-//                            .translationY(0f)
-//                            .setDuration(500)
-//                            .start()
-//                    }.start()
-//
-//                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.size
-//                handler.postDelayed(this, 10000)
-//            }
-//        }
-//        handler.post(phraseRunnable)
-//    }
 
     private fun startPhraseRotation(phraseType: String) {
         phrases = when (phraseType) {
@@ -1009,105 +752,66 @@ class HomeFragment : Fragment() {
         MediaPlayer.create(requireContext(), R.raw.level_up_ding_2).start()
     }
 
-    private fun setupProgressChart() {
-        // Пример данных (в будущем ты получишь их с сервера)
-        val weightHistory = listOf(
-            WeightEntry("2025-05-01", 78f),
-            WeightEntry("2025-05-03", 75.4f),
-            WeightEntry("2025-05-05", 74.8f),
-            WeightEntry("2025-05-07", 74.2f),
-            WeightEntry("2025-05-09", 73.9f),
-            WeightEntry("2025-05-11", 73.2f),
-            WeightEntry("2025-05-13", 72.8f),
-            WeightEntry("2025-05-14", 76.4f),
-            WeightEntry("2025-05-18", 75.3f),
-            WeightEntry("2025-05-19", 74.3f),
-            WeightEntry("2025-05-20", 73.3f),
-            WeightEntry("2025-05-21", 72.3f),
-            WeightEntry("2025-05-22", 71.3f),
-            WeightEntry("2025-05-23", 72.5f),
-            WeightEntry("2025-05-24", 71.0f),
-
-            WeightEntry("2025-05-25", 72.0f),
-            WeightEntry("2025-05-26", 73.0f),
-            WeightEntry("2025-05-27", 74.0f),
-            WeightEntry("2025-05-28", 75.0f),
-            WeightEntry("2025-05-29", 76.0f),
-            WeightEntry("2025-05-30", 74.0f),
-            WeightEntry("2025-05-31", 75.0f),
-            WeightEntry("2025-06-01", 73.0f),
-            WeightEntry("2025-05-02", 72.0f),
-            WeightEntry("2025-05-03", 71.0f),
-            WeightEntry("2025-05-04", 72.0f),
-            WeightEntry("2025-05-05", 71.0f),
-
-            WeightEntry("2025-05-25", 72.0f),
-            WeightEntry("2025-05-26", 73.0f),
-            WeightEntry("2025-05-27", 74.0f),
-            WeightEntry("2025-05-28", 75.0f),
-            WeightEntry("2025-05-29", 76.0f),
-            WeightEntry("2025-05-30", 74.0f),
-            WeightEntry("2025-05-31", 75.0f),
-            WeightEntry("2025-06-01", 73.0f),
-            WeightEntry("2025-05-02", 72.0f),
-            WeightEntry("2025-05-03", 71.0f),
-            WeightEntry("2025-05-04", 72.0f),
-            WeightEntry("2025-05-05", 71.0f),
-
-
-        )
-
-        val entries = weightHistory.mapIndexed { index, entry ->
-            Entry(index.toFloat(), entry.weight)
-        }
-
-        val dataSet = LineDataSet(entries, "Вес (кг)").apply {
-            color = resources.getColor(R.color.teal_700, null)
-            valueTextColor = resources.getColor(R.color.black, null)
-            lineWidth = 2.5f
-            circleRadius = 4f
-            setDrawFilled(true)
-            fillAlpha = 100
-            fillColor = resources.getColor(R.color.teal_200, null)
-            mode = LineDataSet.Mode.CUBIC_BEZIER
-        }
-
-        dataSet.setDrawValues(false) // отключить отображение значений на графике
-        progressChart.data = LineData(dataSet)
-
-        progressChart.apply {
-            description.isEnabled = false
-            axisRight.isEnabled = false
-
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.setDrawGridLines(false)
-            xAxis.labelRotationAngle = -30f
-            xAxis.granularity = 1f
-            xAxis.valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
-
-            axisLeft.setDrawGridLines(true)
-            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-
-            legend.isEnabled = false
-            setTouchEnabled(false)
-            invalidate()
-        }
-
-        val startWeight = weightHistory.first().weight
-        val currentWeight = weightHistory.last().weight
-        val goalWeight = 70f
-
-        weightText.text = "Текущий вес: ${currentWeight.toInt()} кг"
-        goalWeightText.text = "Цель: ${goalWeight.toInt()} кг"
-
-        val delta = goalWeight - startWeight
-        val progressDelta = currentWeight - startWeight
-        val progressPercent = if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
-        val remaining = kotlin.math.abs(currentWeight - goalWeight)
-
-//        progressPercentText.text = "Прогресс: ${progressPercent.toInt()} хахахаха%"
-        weightLeftText.text = "Осталось: ${"%.1f".format(remaining)} кг"
-    }
+//    private fun setupProgressChart() {
+//        // Пример данных (в будущем ты получишь их с сервера)
+//        val weightHistory = listOf(
+//            WeightEntry("2025-05-01", 78f),
+//            WeightEntry("2025-05-03", 75.4f),
+//            WeightEntry("2025-05-05", 74.8f)
+//
+//        )
+//
+//        val entries = weightHistory.mapIndexed { index, entry ->
+//            Entry(index.toFloat(), entry.weight)
+//        }
+//
+//        val dataSet = LineDataSet(entries, "Вес (кг)").apply {
+//            color = resources.getColor(R.color.teal_700, null)
+//            valueTextColor = resources.getColor(R.color.black, null)
+//            lineWidth = 2.5f
+//            circleRadius = 4f
+//            setDrawFilled(true)
+//            fillAlpha = 100
+//            fillColor = resources.getColor(R.color.teal_200, null)
+//            mode = LineDataSet.Mode.CUBIC_BEZIER
+//        }
+//
+//        dataSet.setDrawValues(false) // отключить отображение значений на графике
+//        progressChart.data = LineData(dataSet)
+//
+//        progressChart.apply {
+//            description.isEnabled = false
+//            axisRight.isEnabled = false
+//
+//            xAxis.position = XAxis.XAxisPosition.BOTTOM
+//            xAxis.setDrawGridLines(false)
+//            xAxis.labelRotationAngle = -30f
+//            xAxis.granularity = 1f
+//            xAxis.valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
+//
+//            axisLeft.setDrawGridLines(true)
+//            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+//
+//            legend.isEnabled = false
+//            setTouchEnabled(false)
+//            invalidate()
+//        }
+//
+//        val startWeight = weightHistory.first().weight
+//        val currentWeight = weightHistory.last().weight
+//        val goalWeight = 70f
+//
+//        weightText.text = "Текущий вес: ${currentWeight.toInt()} кг"
+//        goalWeightText.text = "Цель: ${goalWeight.toInt()} кг"
+//
+//        val delta = goalWeight - startWeight
+//        val progressDelta = currentWeight - startWeight
+//        val progressPercent = if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
+//        val remaining = kotlin.math.abs(currentWeight - goalWeight)
+//
+////        progressPercentText.text = "Прогресс: ${progressPercent.toInt()} хахахаха%"
+//        weightLeftText.text = "Осталось: ${"%.1f".format(remaining)} кг"
+//    }
 
     private fun calculateNutrition(
         weightKg: Float,

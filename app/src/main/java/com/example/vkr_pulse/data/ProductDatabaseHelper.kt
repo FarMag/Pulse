@@ -731,6 +731,30 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, "produ
         }
     }
 
+    fun getFirstProducts(limit: Int): List<FoodItem> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM products ORDER BY id ASC LIMIT ?", arrayOf(limit.toString())
+        )
+
+        val results = mutableListOf<FoodItem>()
+        while (cursor.moveToNext()) {
+            results.add(
+                FoodItem(
+                    id = cursor.getInt(0),
+                    name = cursor.getString(1),
+                    calories = cursor.getInt(2),
+                    protein = cursor.getFloat(3),
+                    fats = cursor.getFloat(4),
+                    carbs = cursor.getFloat(5)
+                )
+            )
+        }
+        cursor.close()
+        return results
+    }
+
+
     fun searchProducts(query: String): List<FoodItem> {
         val db = readableDatabase
         val cursor = db.rawQuery(

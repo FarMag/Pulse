@@ -23,4 +23,9 @@
         android:id="@+id/profileFragment"
         android:name="com.example.vkr_pulse.ProfileFragment"
         android:label="Профиль" />
+
+    <fragment
+        android:id="@+id/recipesFragment"
+        android:name="com.example.vkr_pulse.RecipesFragment"
+        android:label="Рецепты" />
 </navigation>
