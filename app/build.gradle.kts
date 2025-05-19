@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+//    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -30,7 +31,6 @@ android {
         }
     }
 
-    // ✅ ВАЖНО: Добавляешь flavors
     flavorDimensions += "design"
     productFlavors {
         create("original") {
@@ -96,6 +96,10 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.4.0")
     implementation ("com.kizitonwose.calendar:view:2.5.2")
     implementation(libs.mysql.connector.java)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+//    implementation(libs.glide)
+////    kapt(libs.glide.compiler)
+//    kapt("com.github.bumptech.glide:compiler:4.16.0")
     implementation(libs.okhttp)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
