@@ -179,6 +179,11 @@ class TrainingPlansFragment : Fragment() {
             itemView.findViewById<TextView>(R.id.planName).text = plan.name
             itemView.findViewById<TextView>(R.id.planDesc).text = plan.desc
             itemView.findViewById<ImageView>(R.id.planIcon).setImageResource(plan.iconRes)
+
+            itemView.setOnClickListener {
+                showTrainingPlanDialog(plan.name, plan.desc, plan.iconRes)
+            }
+
             // Добавляем инфлейченное представление в контейнер
             plansContainer.addView(itemView)
         }
@@ -190,6 +195,22 @@ class TrainingPlansFragment : Fragment() {
         }
     }
 
+    private fun showTrainingPlanDialog(name: String, desc: String, imageRes: Int) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_training_plan_details, null)
+
+        dialogView.findViewById<TextView>(R.id.planDetailsName).text = name
+        dialogView.findViewById<TextView>(R.id.planDetailsDesc).text = desc
+        dialogView.findViewById<ImageView>(R.id.planDetailsImage).setImageResource(imageRes)
+
+        val dialog = android.app.AlertDialog.Builder(requireContext(), R.style.CustomDialog) // если нужен прозрачный фон
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.closePlanDetailsButton).setOnClickListener { dialog.dismiss() }
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
+    }
 
 
 

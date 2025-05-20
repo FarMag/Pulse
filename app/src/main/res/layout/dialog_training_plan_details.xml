@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_rounded"
+    android:paddingTop="0dp"
+    android:paddingBottom="18dp"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp">
+
+    <!-- Большая картинка -->
+    <ImageView
+        android:id="@+id/planDetailsImage"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_mass"
+        android:background="@drawable/bg_top_rounded"
+        android:contentDescription="Фото плана" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:id="@+id/planDetailsName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Название плана"
+            android:textSize="20sp"
+            android:textColor="#1B2029"
+            android:fontFamily="@font/lato_black"
+            android:layout_marginTop="4dp"
+            />
+
+        <TextView
+            android:id="@+id/planDetailsDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Подробное описание"
+            android:textSize="15sp"
+            android:textColor="#5C5C5C"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/lato"
+            />
+
+        <Button
+            android:id="@+id/closePlanDetailsButton"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:text="Закрыть"
+            android:textColor="@color/blue"
+            android:background="@drawable/bg_button_secondary"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="2dp"
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_black"
+            />
+    </LinearLayout>
+</LinearLayout>
