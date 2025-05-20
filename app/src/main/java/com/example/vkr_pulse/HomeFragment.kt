@@ -81,6 +81,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val notesButton = view.findViewById<Button>(R.id.notesButton)
+
+        notesButton.setOnClickListener {
+            loadNotesAndShowDialog()
+        }
 
         val mainContent = view.findViewById<ScrollView>(R.id.mainContent)
         val loadingIndicator = view.findViewById<ProgressBar>(R.id.loadingIndicator)
@@ -183,6 +188,59 @@ class HomeFragment : Fragment() {
     }
 
 
+    private fun loadNotesAndShowDialog() {
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null) ?: return
+
+        // Получаем заметку из БД (Flask)
+        val client = OkHttpClient()
+        val url = "http://YOUR_FLASK_URL/api/getNotes"
+        val formBody = FormBody.Builder().add("access_token", accessToken).build()
+        val request = Request.Builder().url(url).post(formBody).build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Покажи диалог без текста если ошибка
+                showNotesDialog("")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val data = response.body?.string()
+                var notes = ""
+                if (response.isSuccessful && data != null) {
+                    val obj = JSONObject(data)
+                    notes = obj.optString("notes", "")
+                }
+                requireActivity().runOnUiThread {
+                    showNotesDialog(notes)
+                }
+            }
+        })
+    }
+
+    private fun showNotesDialog(initialText: String) {
+        NotesDialogFragment(initialText) { noteText ->
+            saveNotesToServer(noteText)
+        }.show(childFragmentManager, "NotesDialog")
+    }
+
+    private fun saveNotesToServer(noteText: String) {
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null) ?: return
+
+        val client = OkHttpClient()
+        val url = "http://192.168.0.19/api/saveNotes"
+        val formBody = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("notes", noteText)
+            .build()
+        val request = Request.Builder().url(url).post(formBody).build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) { /* Можно показать Toast о неудаче */ }
+            override fun onResponse(call: Call, response: Response) { /* Можно показать Toast об успехе */ }
+        })
+    }
 
 
     private fun fetchUserData(accessToken: String) {
