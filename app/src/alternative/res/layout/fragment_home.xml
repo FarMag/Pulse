@@ -330,12 +330,12 @@
 
             <!-- Кнопка -->
             <Button
-                android:id="@+id/startWorkoutButton"
+                android:id="@+id/notesButton"
                 android:layout_width="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_height="wrap_content"
-                android:text="Тренироваться"
+                android:text="Блокнот"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:fontFamily="@font/lato_black"

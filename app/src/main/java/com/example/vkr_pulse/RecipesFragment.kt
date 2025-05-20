@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -135,113 +136,6 @@ class RecipesFragment : Fragment() {
         })
     }
 
-//    private fun showRecipes(data: String) {
-//        val recipesContainer = view?.findViewById<LinearLayout>(R.id.recipesContainer) ?: return
-//
-//        // Очищаем старые блоки
-//        recipesContainer.removeAllViews()
-//
-//        // Парсим массив JSON
-//        val recipesArray = JSONArray(data)
-//        for (i in 0 until recipesArray.length()) {
-//            val recipeObj = recipesArray.getJSONObject(i)
-//
-//            val id = recipeObj.getString("id")
-//            val name = recipeObj.getString("name")
-//            val calories = recipeObj.getInt("calories")
-//            val protein = recipeObj.getDouble("protein")
-//            val fat = recipeObj.getDouble("fat")
-//            val carbs = recipeObj.getDouble("carbohydrates")
-//            val description = recipeObj.getString("ingredient_name")
-//
-//            // Создай блок для рецепта (например, через item_recipe.xml)
-//            val itemView = layoutInflater.inflate(R.layout.item_recipe, recipesContainer, false)
-//
-//            // Пример: наполнение itemView
-//            itemView.findViewById<TextView>(R.id.recipeName).text = name
-//            itemView.findViewById<TextView>(R.id.recipeInfo).text = "Ккал: $calories | Б: ${"%.1f".format(protein)} | Ж: ${"%.1f".format(fat)} | У: ${"%.1f".format(carbs)}"
-//
-//
-//            // itemView.findViewById<ImageView>(R.id.recipeImage).setImageResource(R.drawable.food_placeholder)
-//
-//            // Добавляем itemView в контейнер
-//            recipesContainer.addView(itemView)
-//        }
-//    }
-
-//    private fun showRecipes(data: String) {
-//        val recipesContainer = view?.findViewById<LinearLayout>(R.id.recipesContainer) ?: return
-//        recipesContainer.removeAllViews()
-//
-//        val recipesArray = JSONArray(data)
-//        for (i in 0 until recipesArray.length()) {
-//            val recipeObj = recipesArray.getJSONObject(i)
-//
-//            val name = recipeObj.getString("name")
-//            val calories = recipeObj.getInt("calories")
-//            val protein = recipeObj.getDouble("protein")
-//            val fat = recipeObj.getDouble("fat")
-//            val carbs = recipeObj.getDouble("carbohydrates")
-//            val imageUrl = recipeObj.optString("image_url", null)
-//
-//            val itemView = layoutInflater.inflate(R.layout.item_recipe, recipesContainer, false)
-//
-//            itemView.findViewById<TextView>(R.id.recipeName).text = name
-//            itemView.findViewById<TextView>(R.id.recipeInfo).text =
-//                "Ккал: $calories | Б: ${"%.1f".format(protein)} | Ж: ${"%.1f".format(fat)} | У: ${"%.1f".format(carbs)}"
-//
-//            val imageView = itemView.findViewById<ImageView>(R.id.recipeImage)
-//
-//            if (!imageUrl.isNullOrEmpty()) {
-//                Glide.with(this)
-//                    .load(imageUrl)
-//                    .placeholder(R.drawable.food)
-//                    .error(R.drawable.food) // в случае ошибки
-//                    .into(imageView)
-//            } else {
-//                imageView.setImageResource(R.drawable.food)
-//            }
-//
-//            recipesContainer.addView(itemView)
-//        }
-//    }
-
-//    private fun showRecipes(data: String) {
-//        val recipesContainer = view?.findViewById<LinearLayout>(R.id.recipesContainer) ?: return
-//        recipesContainer.removeAllViews()
-//
-//        val recipesArray = JSONArray(data)
-//        for (i in 0 until recipesArray.length()) {
-//            val recipeObj = recipesArray.getJSONObject(i)
-//            val id = recipeObj.getString("id") // Например, "827"
-//            val name = recipeObj.getString("name")
-//            val calories = recipeObj.getInt("calories")
-//            val protein = recipeObj.getDouble("protein")
-//            val fat = recipeObj.getDouble("fat")
-//            val carbs = recipeObj.getDouble("carbohydrates")
-//
-//            val itemView = layoutInflater.inflate(R.layout.item_recipe, recipesContainer, false)
-//
-//            itemView.findViewById<TextView>(R.id.recipeName).text = name
-//            itemView.findViewById<TextView>(R.id.recipeInfo).text =
-//                "Ккал: $calories | Б: ${"%.1f".format(protein)} | Ж: ${"%.1f".format(fat)} | У: ${"%.1f".format(carbs)}"
-//
-//            val imageView = itemView.findViewById<ImageView>(R.id.recipeImage)
-//
-//            // Получаем идентификатор ресурса изображения по имени, например "img827"
-//            val imageName = "img$id"
-//            val resId = resources.getIdentifier(imageName, "drawable", requireContext().packageName)
-//
-//            if (resId != 0) {
-//                imageView.setImageResource("food_".resId)
-//            } else {
-//                imageView.setImageResource(R.drawable.food) // Заглушка, если изображение не найдено
-////                imageView.setImageResource(R.drawable.food_820)
-//            }
-//
-//            recipesContainer.addView(itemView)
-//        }
-//    }
 
     private fun showRecipes(data: String) {
         val recipesContainer = view?.findViewById<LinearLayout>(R.id.recipesContainer) ?: return
@@ -250,34 +144,82 @@ class RecipesFragment : Fragment() {
         val recipesArray = JSONArray(data)
         for (i in 0 until recipesArray.length()) {
             val recipeObj = recipesArray.getJSONObject(i)
-            val id = recipeObj.getString("id") // Например, "827"
+            val id = recipeObj.getString("id")
             val name = recipeObj.getString("name")
             val calories = recipeObj.getInt("calories")
             val protein = recipeObj.getDouble("protein")
             val fat = recipeObj.getDouble("fat")
             val carbs = recipeObj.getDouble("carbohydrates")
+            val description = recipeObj.optString("description", "") // если нет, используй "ingredient_name"
+            val ingredientList = recipeObj.optString("ingredient_name", "")
+            // Например, ingredientList это твой "рецепт" - если нет отдельного поля
 
             val itemView = layoutInflater.inflate(R.layout.item_recipe, recipesContainer, false)
-
             itemView.findViewById<TextView>(R.id.recipeName).text = name
             itemView.findViewById<TextView>(R.id.recipeInfo).text =
                 "Ккал: $calories | Б: ${"%.1f".format(protein)} | Ж: ${"%.1f".format(fat)} | У: ${"%.1f".format(carbs)}"
 
+            // ФОТО блюда
             val imageView = itemView.findViewById<ImageView>(R.id.recipeImage)
-
-            // Получаем идентификатор ресурса изображения по имени, например "img827"
             val imageName = "food_$id"
             val resId = resources.getIdentifier(imageName, "drawable", requireContext().packageName)
+            imageView.setImageResource(if (resId != 0) resId else R.drawable.food_default)
 
-            if (resId != 0) {
-                imageView.setImageResource(resId) // Исправлено
-            } else {
-                imageView.setImageResource(R.drawable.food_default) // Заглушка, если изображение не найдено
+            // --- КЛИК: ОТКРЫТЬ МОДАЛКУ ---
+            itemView.setOnClickListener {
+                showRecipeDialog(
+                    id = id,
+                    name = name,
+                    calories = calories,
+                    protein = protein,
+                    fat = fat,
+                    carbs = carbs,
+                    description = description,
+                    recipe = ingredientList
+                )
             }
 
             recipesContainer.addView(itemView)
         }
     }
+
+    private fun showRecipeDialog(
+        id: String,
+        name: String,
+        calories: Int,
+        protein: Double,
+        fat: Double,
+        carbs: Double,
+        description: String,
+        recipe: String
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_recipe_details, null)
+
+        // Фото-полоса сверху
+        val imageView = dialogView.findViewById<ImageView>(R.id.recipeDialogImage)
+        val imageName = "food_$id"
+        val resId = resources.getIdentifier(imageName, "drawable", requireContext().packageName)
+        imageView.setImageResource(if (resId != 0) resId else R.drawable.food_default)
+
+        dialogView.findViewById<TextView>(R.id.recipeDialogName).text = name
+        dialogView.findViewById<TextView>(R.id.recipeDialogKcal).text =
+            "Ккал: $calories | Б: ${"%.1f".format(protein)} | Ж: ${"%.1f".format(fat)} | У: ${"%.1f".format(carbs)}"
+
+        dialogView.findViewById<TextView>(R.id.recipeDialogRecipe).text =
+            if (recipe.isNotBlank()) "$recipe" else "Рецепт не указан"
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<Button>(R.id.closeDialogButton).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
 
 
 }

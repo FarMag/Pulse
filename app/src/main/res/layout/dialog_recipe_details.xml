@@ -2,24 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_rounded"
     android:paddingTop="0dp"
     android:paddingBottom="16dp"
     android:paddingStart="0dp"
-    android:paddingEnd="0dp"
-    >
+    android:paddingEnd="0dp">
 
     <!-- Тонкая широкая фотополоса -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/recipeDialogImage"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
+        android:src="@drawable/food_default"
         android:contentDescription="Фото блюда"
-        android:background="@drawable/bg_top_rounded"
-        />
-
+        app:shapeAppearanceOverlay="@style/TopRoundedImageDialog"/>
     <!-- Контейнер для контента -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,27 +51,18 @@
             android:fontFamily="@font/lato"
             />
 
-        <TextView
-            android:id="@+id/recipeDialogDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Краткое описание блюда — польза и вкус."
-            android:textSize="15sp"
-            android:textColor="#5C5C5C"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/lato"
-            />
 
         <TextView
             android:id="@+id/recipeDialogRecipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Рецепт: шаг 1, шаг 2, шаг 3..."
+            android:text=""
             android:textSize="15sp"
             android:textColor="#3C3C3C"
             android:layout_marginTop="12dp"
             android:fontFamily="@font/lato"
             />
+
 
         <Button
             android:id="@+id/closeDialogButton"
