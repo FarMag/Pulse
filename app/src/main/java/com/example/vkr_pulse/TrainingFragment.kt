@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -15,6 +16,7 @@ import com.kizitonwose.calendar.core.*
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.MonthDayBinder
+import com.example.vkr_pulse.WorkoutTimerDialogFragment
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -45,6 +47,12 @@ class TrainingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val startWorkoutButton = view.findViewById<Button>(R.id.startWorkoutButton)
+        startWorkoutButton.setOnClickListener {
+            val dialog = WorkoutTimerDialogFragment()
+            dialog.show(childFragmentManager, "WorkoutTimerDialog")
+        }
 
 
         val trainingPlansCard = view.findViewById<CardView>(R.id.trainingPlansCard)

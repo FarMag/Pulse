@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_rounded"
+    android:paddingTop="0dp"
+    android:paddingBottom="16dp"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    android:paddingHorizontal="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Выбор режима -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="4dp"
+        >
+
+        <Button
+            android:id="@+id/stopwatchModeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="Секундомер"
+            android:paddingHorizontal="4dp"
+            android:textSize="15sp"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_button_secondary"
+            android:textColor="@color/pink"
+            android:fontFamily="@font/lato_black"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"/>
+
+        <Button
+            android:id="@+id/timerModeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:text="Таймер"
+            android:textSize="15sp"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_button_secondary"
+            android:textColor="@color/blue"
+            android:fontFamily="@font/lato_black"
+            android:backgroundTint="@color/white"/>
+    </LinearLayout>
+
+    <!-- Время -->
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textSize="46sp"
+        android:textColor="#181F2C"
+        android:fontFamily="@font/lato_black"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        />
+
+    <!-- Кнопка ввода времени для таймера -->
+    <EditText
+        android:id="@+id/inputTimerEditText"
+        android:layout_width="140dp"
+        android:layout_height="38dp"
+        android:hint="Минуты"
+        android:inputType="number"
+        android:gravity="center"
+        android:background="@drawable/bg_edittext_rounded"
+        android:fontFamily="@font/lato"
+        android:textColor="#181F2C"
+        android:textColorHint="#B0B0B0"
+        android:textSize="22sp"
+        android:visibility="gone"
+        android:layout_marginBottom="6dp"
+        />
+
+    <!-- Кнопки управления -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        >
+
+        <ImageButton
+            android:id="@+id/startPauseButton"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:src="@drawable/ic_play"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="@color/pink"
+            android:contentDescription="Старт"
+            android:tint="@color/white"
+            android:layout_marginEnd="16dp" />
+
+        <ImageButton
+            android:id="@+id/resetButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_reset_1"
+            android:background="@drawable/bg_circle_button"
+            android:backgroundTint="@color/white"
+            android:scaleType="center"
+            android:contentDescription="Сброс"
+            android:tint="@color/pink" />
+
+    </LinearLayout>
+
+    <!-- Кнопка закрытия -->
+    <Button
+        android:id="@+id/closeTimerDialogButton"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:text="Закрыть"
+        android:layout_marginHorizontal="32dp"
+        android:textColor="@color/blue"
+        android:background="@drawable/bg_button_secondary"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="2dp"
+        android:textSize="15sp"
+        android:fontFamily="@font/lato_black"
+        />
+</LinearLayout>

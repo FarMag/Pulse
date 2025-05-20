@@ -7,7 +7,8 @@
     android:paddingStart="22dp"
     android:paddingEnd="22dp"
     android:paddingTop="18dp"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    android:layout_marginHorizontal="24dp">
 
     <!-- Заголовок -->
     <TextView

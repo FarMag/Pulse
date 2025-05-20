@@ -403,7 +403,7 @@
                             android:id="@+id/resetIcon"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@drawable/ic_reset"
+                            android:src="@drawable/ic_reset_1"
                             app:tint="#FF5252"
                             android:layout_marginStart="4dp" />
                     </LinearLayout>

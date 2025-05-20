@@ -84,6 +84,8 @@ class HomeFragment : Fragment() {
 
         val notesButton = view.findViewById<Button>(R.id.notesButton)
 
+
+
         notesButton.setOnClickListener {
             loadNotesAndShowDialog()
         }
@@ -127,7 +129,7 @@ class HomeFragment : Fragment() {
 //        setupProgressChart()
 
         //шаги и прогрессбар для них
-        val stepsDone = 3400      // получай из БД или часов
+        val stepsDone = 0      // получай из БД или часов
         val stepsGoal = 7500      // пользовательская цель
         val stepsPercentage = (stepsDone.toFloat() / stepsGoal * 100).toInt().coerceAtMost(100)
 
@@ -193,6 +195,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun showNotesDialog(initialText: String) {
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null) ?: return
+
+
+        fetchUserData(accessToken)
         NotesDialogFragment(initialText) { noteText ->
             saveNotesToServer(noteText)
         }.show(childFragmentManager, "NotesDialog")

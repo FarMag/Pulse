@@ -23,6 +23,7 @@ class NotesDialogFragment(
         val saveButton = view.findViewById<Button>(R.id.saveNotesButton)
         val cancelButton = view.findViewById<Button>(R.id.cancelNotesButton)
 
+
         notesEditText.setText(initialText)
         notesEditText.setSelection(notesEditText.text.length)
 
