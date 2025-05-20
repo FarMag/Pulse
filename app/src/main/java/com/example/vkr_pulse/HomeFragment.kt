@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
     private var targetWeight: Double = 0.0
     private var currentWeight: Float = 0F
 
+    private var noteText: String = ""
     private var currentKkal: Int = 0
     private var goalKkal: Int = 0
 
@@ -187,35 +188,8 @@ class HomeFragment : Fragment() {
 
     }
 
-
     private fun loadNotesAndShowDialog() {
-        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
-        val accessToken = preferences.getString("access_jwt", null) ?: return
-
-        // Получаем заметку из БД (Flask)
-        val client = OkHttpClient()
-        val url = "http://YOUR_FLASK_URL/api/getNotes"
-        val formBody = FormBody.Builder().add("access_token", accessToken).build()
-        val request = Request.Builder().url(url).post(formBody).build()
-
-        client.newCall(request).enqueue(object: Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                // Покажи диалог без текста если ошибка
-                showNotesDialog("")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val data = response.body?.string()
-                var notes = ""
-                if (response.isSuccessful && data != null) {
-                    val obj = JSONObject(data)
-                    notes = obj.optString("notes", "")
-                }
-                requireActivity().runOnUiThread {
-                    showNotesDialog(notes)
-                }
-            }
-        })
+        showNotesDialog(noteText)
     }
 
     private fun showNotesDialog(initialText: String) {
@@ -225,11 +199,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun saveNotesToServer(noteText: String) {
+
+        if (noteText.length > 1023) {
+            showToast("Ошибка: Заметка не должна превышать 1023 символов.")
+            return
+        }
+
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null) ?: return
 
         val client = OkHttpClient()
-        val url = "http://192.168.0.19/api/saveNotes"
+        val url = getString(R.string.url_auth) + "addUserNote"
         val formBody = FormBody.Builder()
             .add("access_token", accessToken)
             .add("notes", noteText)
@@ -240,6 +220,8 @@ class HomeFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) { /* Можно показать Toast о неудаче */ }
             override fun onResponse(call: Call, response: Response) { /* Можно показать Toast об успехе */ }
         })
+
+        fetchUserData(accessToken)
     }
 
 
@@ -443,6 +425,7 @@ class HomeFragment : Fragment() {
 //        val title = jsonObject.getString("title")
         val xp = jsonData.getString("xp")
         currentTotalXp = xp.toInt()
+        noteText = jsonData.getString("notes")
         val weight = jsonData.getDouble("weight")
         targetWeight = jsonData.getDouble("target_weight")
         val targetPhis = jsonData.getString("target_phis")
