@@ -14,7 +14,7 @@ CREATE TABLE users (
     phis_train ENUM('beginner', 'medium', 'athlete'),
     target_phis ENUM('losing', 'mass', 'keeping', 'longevity'),
     xp INT,
-    notes TEXT
+    notes VARCHAR(1023)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
