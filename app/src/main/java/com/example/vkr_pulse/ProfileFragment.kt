@@ -454,7 +454,7 @@ class ProfileFragment : Fragment() {
         nameTextView?.text = jsonResponse.optString("username", defaultUsername)
 
         // Получение почты
-        nameTextEmail?.text = jsonResponse.optString("email", defaultEmail)
+        nameTextEmail?.text = "Почта: ${jsonResponse.optString("email", defaultEmail)}"
 
         // Обработка значения роста
         val height = jsonResponse.optString("height", defaultHeight)

@@ -205,9 +205,9 @@ class HomeFragment : Fragment() {
         }.show(childFragmentManager, "NotesDialog")
     }
 
-    private fun saveNotesToServer(noteText: String) {
+    private fun saveNotesToServer(notes: String) {
 
-        if (noteText.length > 1023) {
+        if (notes.length > 1023) {
             showToast("Ошибка: Заметка не должна превышать 1023 символов.")
             return
         }
@@ -215,11 +215,13 @@ class HomeFragment : Fragment() {
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null) ?: return
 
+        noteText = notes
+
         val client = OkHttpClient()
         val url = getString(R.string.url_auth) + "addUserNote"
         val formBody = FormBody.Builder()
             .add("access_token", accessToken)
-            .add("notes", noteText)
+            .add("notes", notes)
             .build()
         val request = Request.Builder().url(url).post(formBody).build()
 
@@ -228,7 +230,7 @@ class HomeFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) { /* Можно показать Toast об успехе */ }
         })
 
-        fetchUserData(accessToken)
+//        fetchUserData(accessToken)
     }
 
 

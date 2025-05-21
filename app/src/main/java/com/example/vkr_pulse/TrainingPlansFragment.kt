@@ -46,18 +46,18 @@ class TrainingPlansFragment : Fragment() {
         plansContainer = view.findViewById(R.id.trainingPlansContainer)
 
         // Пример списков тренировок
-        val recommendedPlans = listOf(
-            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
-            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
-            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass)
-        )
-        val allPlans = listOf(
-            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
-            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
-            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass),
-            TrainingPlan("Базовая выносливость", "4 раза в неделю, 40 мин", R.drawable.ic_mass),
-            TrainingPlan("Тренировка на спину и пресс", "2 раза в неделю, 50 мин", R.drawable.ic_mass)
-        )
+//        val recommendedPlans = listOf(
+//            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
+//            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
+//            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass)
+//        )
+//        val allPlans = listOf(
+//            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
+//            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
+//            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass),
+//            TrainingPlan("Базовая выносливость", "4 раза в неделю, 40 мин", R.drawable.ic_mass),
+//            TrainingPlan("Тренировка на спину и пресс", "2 раза в неделю, 50 мин", R.drawable.ic_mass)
+//        )
 
         // По дефолту выбрана "Для меня"
         setButtonsActive(isRecommendedActive = true)
@@ -144,6 +144,7 @@ class TrainingPlansFragment : Fragment() {
                     val planJson = jsonResponse.getJSONObject(i)
                     val name = planJson.getString("name")
                     val description = planJson.getString("description")
+                    val exercises = planJson.getString("exercises")
                     // Получаем значение цели
                     val goalString = planJson.getString("goal")
 
@@ -156,7 +157,7 @@ class TrainingPlansFragment : Fragment() {
                         else -> R.drawable.ic_mass // Ресурс по умолчанию, если цель не распознана
                     }
 
-                    val trainingPlan = TrainingPlan(name, description, iconRes)
+                    val trainingPlan = TrainingPlan(name, description, exercises, iconRes)
                     plans.add(trainingPlan)
                 }
 
@@ -178,10 +179,11 @@ class TrainingPlansFragment : Fragment() {
             val itemView = layoutInflater.inflate(R.layout.item_training_plan, plansContainer, false)
             itemView.findViewById<TextView>(R.id.planName).text = plan.name
             itemView.findViewById<TextView>(R.id.planDesc).text = plan.desc
+            itemView.findViewById<TextView>(R.id.planExercises).text = plan.exercises
             itemView.findViewById<ImageView>(R.id.planIcon).setImageResource(plan.iconRes)
 
             itemView.setOnClickListener {
-                showTrainingPlanDialog(plan.name, plan.desc, plan.iconRes)
+                showTrainingPlanDialog(plan.name, plan.desc, plan.exercises, plan.iconRes)
             }
 
             // Добавляем инфлейченное представление в контейнер
@@ -195,12 +197,13 @@ class TrainingPlansFragment : Fragment() {
         }
     }
 
-    private fun showTrainingPlanDialog(name: String, desc: String, imageRes: Int) {
+    private fun showTrainingPlanDialog(name: String, desc: String, exercises: String, imageRes: Int) {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_training_plan_details, null)
 
         dialogView.findViewById<TextView>(R.id.planDetailsName).text = name
         dialogView.findViewById<TextView>(R.id.planDetailsDesc).text = desc
+        dialogView.findViewById<TextView>(R.id.planDetailsExercises).text = exercises
         dialogView.findViewById<ImageView>(R.id.planDetailsImage).setImageResource(imageRes)
 
         val dialog = android.app.AlertDialog.Builder(requireContext(), R.style.CustomDialog) // если нужен прозрачный фон
@@ -268,5 +271,5 @@ class TrainingPlansFragment : Fragment() {
 
 
     //    data class TrainingPlan(val name: String, val desc: String, val iconRes: Int)
-data class TrainingPlan(val name: String, val desc: String, val iconRes: Int)
+data class TrainingPlan(val name: String, val desc: String, val exercises: String, val iconRes: Int)
 }

@@ -48,6 +48,15 @@
                 android:textSize="14sp"
                 android:textColor="#73777F"
                 android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/planExercises"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Упражнения"
+                android:textSize="14sp"
+                android:textColor="#73777F"
+                android:layout_marginTop="5dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
