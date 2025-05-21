@@ -10,45 +10,73 @@
     android:layout_marginBottom="8dp"
     android:backgroundTint="#FFFFFF">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:orientation="vertical">
 
-        <!-- Название приёма пищи -->
-        <TextView
-            android:id="@+id/mealTitle"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="20dp"
-            android:text="Прием пищи"
-            android:textSize="20sp"
-            android:textColor="#222"
-            android:fontFamily="@font/lato_black" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
 
-        <!-- Ккал -->
-        <TextView
-            android:id="@+id/mealCalories"
-            android:layout_width="wrap_content"
+            <!-- Название приёма пищи -->
+            <TextView
+                android:id="@+id/mealTitle"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/lato_black"
+                android:text="Прием пищи"
+                android:textColor="#222"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/expandArrow"
+                android:layout_width="20dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_chevron_down"
+                android:tint="#C4C6CE"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Развернуть/Свернуть" />
+
+            <!-- Ккал -->
+            <TextView
+                android:id="@+id/mealCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 ккал"
+                android:textColor="#666"
+                android:textSize="14sp"
+                android:fontFamily="@font/lato"
+                android:layout_marginEnd="12dp" />
+
+            <!-- Кнопка "+" -->
+            <ImageView
+                android:id="@+id/addMealButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_add"
+                android:tint="#2196F3"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Добавить еду" />
+
+            <!-- Список блюд для этого приема пищи -->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mealProductsList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0 ккал"
-            android:textColor="#666"
-            android:textSize="14sp"
-            android:fontFamily="@font/lato"
-            android:layout_marginEnd="12dp" />
-
-        <!-- Кнопка "+" -->
-        <ImageView
-            android:id="@+id/addMealButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_add"
-            android:tint="#2196F3"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Добавить еду" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
