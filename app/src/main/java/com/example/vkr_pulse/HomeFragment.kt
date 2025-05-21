@@ -241,7 +241,7 @@ class HomeFragment : Fragment() {
 
         urlAddresses.forEach { urlAddress ->
             val url = when (urlAddress) {
-                "progress" -> getString(R.string.url_progress) + "userProgress"
+                "progress" -> getString(R.string.url_progress) + "getUserWeight"
                 "auth" -> getString(R.string.url_auth) + "getUserData"
                 "nutrition" -> getString(R.string.url_nutrition) + "getNutritionData"
                 else -> throw IllegalArgumentException("Неизвестный адрес URL: $urlAddress")
@@ -284,7 +284,7 @@ class HomeFragment : Fragment() {
                         try {
                             val jsonResponse = JSONObject(responseData)
                             when (urlAddress) {
-                                "progress" -> parseProgressData(jsonResponse)
+                                "progress" -> parseWeightData(jsonResponse)
                                 "auth" -> parseUserData(jsonResponse)
                                 "nutrition" -> ParseNutritionData(jsonResponse)
                             }
@@ -497,7 +497,7 @@ class HomeFragment : Fragment() {
 //        return targetPhis
     }
 
-    private fun parseProgressData(jsonData: JSONObject) {
+    private fun parseWeightData(jsonData: JSONObject) {
         val firstWeight = jsonData.getJSONObject("first_data_user")
         val startWeight = firstWeight.getString("weight").toFloat()
 
