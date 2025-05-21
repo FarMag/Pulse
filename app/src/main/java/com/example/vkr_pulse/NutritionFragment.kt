@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Toast
@@ -28,6 +29,11 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
+import android.animation.ValueAnimator
+import android.view.animation.DecelerateInterpolator
+import org.json.JSONArray
 
 class NutritionFragment : Fragment() {
 
@@ -49,7 +55,7 @@ class NutritionFragment : Fragment() {
     data class FoodItemEntry(val item: FoodItem, val grams: Int)
 
     private lateinit var calorieLottie: LottieAnimationView
-//    private var calorieGoal = 2200
+    //    private var calorieGoal = 2200
     private var calorieGoal = 0
     private var currentCalories = 0
     private val maxLottieProgress = 0.875f
@@ -67,7 +73,7 @@ class NutritionFragment : Fragment() {
     private var fatsMax = 0
 
     private var currentWater = 0  // в мл
-//    private var waterGoal = 2000 // пример: рассчитывается из веса
+    //    private var waterGoal = 2000 // пример: рассчитывается из веса
     private var waterGoal = 0 // пример: рассчитывается из веса
 
     override fun onCreateView(
@@ -84,12 +90,19 @@ class NutritionFragment : Fragment() {
         mainContent.visibility = View.GONE
         loadingIndicator.visibility = View.VISIBLE
 
+        val scrollView = requireView().findViewById<ScrollView>(R.id.mainContent)
 
         // 1. Инициализация view (без логики бизнес-расчётов!)
         val breakfastBlock = view.findViewById<View>(R.id.breakfastBlock)
         val lunchBlock = view.findViewById<View>(R.id.lunchBlock)
         val dinnerBlock = view.findViewById<View>(R.id.dinnerBlock)
         val snackBlock = view.findViewById<View>(R.id.snackBlock)
+
+        setupMealExpandCollapse(breakfastBlock)
+        setupMealExpandCollapse(lunchBlock)
+        setupMealExpandCollapse(dinnerBlock)
+        setupMealExpandCollapse(snackBlock)
+
 
         breakfastBlock.findViewById<TextView>(R.id.mealTitle).text = "Завтрак"
         lunchBlock.findViewById<TextView>(R.id.mealTitle).text = "Обед"
@@ -436,6 +449,12 @@ class NutritionFragment : Fragment() {
         updateMealCalories(R.id.dinnerBlock, dinner.getInt("calories"))
         updateMealCalories(R.id.snackBlock, snack.getInt("calories"))
 
+        // Новый код — обновляем списки продуктов:
+        updateMealProducts(requireView().findViewById(R.id.breakfastBlock), breakfast.getJSONArray("food_items"))
+        updateMealProducts(requireView().findViewById(R.id.lunchBlock), lunch.getJSONArray("food_items"))
+        updateMealProducts(requireView().findViewById(R.id.dinnerBlock), dinner.getJSONArray("food_items"))
+        updateMealProducts(requireView().findViewById(R.id.snackBlock), snack.getJSONArray("food_items"))
+
         currentCalories = calories
         updateCaloriesUI()
         view?.findViewById<ScrollView>(R.id.mainContent)?.visibility = View.VISIBLE
@@ -469,6 +488,22 @@ class NutritionFragment : Fragment() {
         fatsMax = nutrition.fats
 
         waterGoal = ((weightKg * 30).toInt()).coerceIn(1200, 4000)
+    }
+
+    private fun updateMealProducts(mealBlock: View, foodItems: JSONArray) {
+        val productsList = mealBlock.findViewById<LinearLayout>(R.id.mealProductsList)
+        productsList.removeAllViews() // очищаем, чтобы не дублировались
+
+        val inflater = LayoutInflater.from(requireContext())
+        for (i in 0 until foodItems.length()) {
+            val item = foodItems.getJSONObject(i)
+            val productName = item.getString("name")
+            val calories = item.getDouble("calories").toInt()
+            val productView = inflater.inflate(R.layout.item_meal_product, productsList, false)
+            productView.findViewById<TextView>(R.id.productName).text = productName
+            productView.findViewById<TextView>(R.id.productCalories).text = "$calories ккал"
+            productsList.addView(productView)
+        }
     }
 
     private fun updateWaterData(jsonData: JSONObject) {
@@ -629,6 +664,86 @@ class NutritionFragment : Fragment() {
         toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 120)
         toast.show()
     }
+
+
+    // добавление продуктов в прием пищи
+    private fun addMealProduct(mealBlock: View, productName: String, calories: Int) {
+        val productsList = mealBlock.findViewById<LinearLayout>(R.id.mealProductsList)
+        // Удалить старые вью (если нужно обновить полностью)
+        // productsList.removeAllViews()
+
+        val inflater = LayoutInflater.from(requireContext())
+        val productView = inflater.inflate(R.layout.item_meal_product, productsList, false)
+        productView.findViewById<TextView>(R.id.productName).text = productName
+        productView.findViewById<TextView>(R.id.productCalories).text = "$calories ккал"
+        productsList.addView(productView)
+    }
+
+    // анимация раскрытия продуктов за прием пиищ
+    private fun setupMealExpandCollapse(mealBlock: View) {
+        val productsList = mealBlock.findViewById<LinearLayout>(R.id.mealProductsList)
+        val row = (mealBlock as ViewGroup).getChildAt(0)
+        val nutritionMainLinear = requireView().findViewById<ViewGroup>(R.id.nutritionMainLinear)
+        val arrow = mealBlock.findViewById<ImageView>(R.id.expandArrow)
+        val scrollView = requireView().findViewById<ScrollView>(R.id.mainContent)
+
+        var isExpanded = false
+
+        row.setOnClickListener {
+            isExpanded = !isExpanded
+
+            if (!isExpanded) {
+                val productsListHeight = productsList.height
+                val scrollViewHeight = scrollView.height
+                val contentHeight = scrollView.getChildAt(0).height
+                val scrollY = scrollView.scrollY
+                val distanceToBottom = contentHeight - (scrollY + scrollViewHeight)
+
+                if (distanceToBottom < productsListHeight) {
+                    val targetScrollY = (scrollY - (productsListHeight - distanceToBottom)).coerceAtLeast(0)
+                    val animator = ValueAnimator.ofInt(scrollY, targetScrollY)
+                    animator.duration = 400
+                    animator.interpolator = DecelerateInterpolator()
+                    animator.addUpdateListener { valueAnimator ->
+                        scrollView.scrollTo(0, valueAnimator.animatedValue as Int)
+                    }
+                    animator.start()
+
+                    // После скролла — запоминаем, куда проскроллили
+                    productsList.postDelayed({
+                        // Запоминаем scrollY после анимации
+                        val fixedScrollY = scrollView.scrollY
+
+                        androidx.transition.TransitionManager.beginDelayedTransition(
+                            nutritionMainLinear,
+                            androidx.transition.AutoTransition()
+                        )
+                        productsList.visibility = View.GONE
+                        arrow?.animate()?.rotation(0f)?.setDuration(200)?.start()
+
+                        // Через короткую задержку (после завершения TransitionManager) — выставляем scrollY вручную
+                        productsList.postDelayed({
+                            scrollView.scrollTo(0, fixedScrollY)
+                        }, 150)
+                    }, 420)
+                } else {
+                    // Места хватает, сворачиваем сразу:
+                    androidx.transition.TransitionManager.beginDelayedTransition(nutritionMainLinear, androidx.transition.AutoTransition())
+                    productsList.visibility = View.GONE
+                    arrow?.animate()?.rotation(0f)?.setDuration(200)?.start()
+                }
+            } else {
+                // Раскрываем:
+                androidx.transition.TransitionManager.beginDelayedTransition(nutritionMainLinear, androidx.transition.AutoTransition())
+                productsList.visibility = View.VISIBLE
+                arrow?.animate()?.rotation(180f)?.setDuration(200)?.start()
+            }
+        }
+
+
+    }
+
+
 
 // Класс-результат
 

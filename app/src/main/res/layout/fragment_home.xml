@@ -245,7 +245,24 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView
+            <Button
+                android:id="@+id/notesButton"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:text="Блокнот"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/lato_black"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/pink"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+            <androidx.cardview.widget.CardView
             android:id="@+id/activityCard"
             android:layout_width="match_parent"
             android:layout_marginStart="16dp"
