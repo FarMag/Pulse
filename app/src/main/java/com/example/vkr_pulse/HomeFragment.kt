@@ -64,7 +64,6 @@ class HomeFragment : Fragment() {
     private lateinit var phraseRunnable: Runnable
 
     private var previousLevel: Int = -1
-//    private var currentTotalXp: Int = 200
     private var currentTotalXp: Int = 0
     private var targetWeight: Double = 0.0
     private var currentWeight: Float = 0F
@@ -98,12 +97,9 @@ class HomeFragment : Fragment() {
 
         mainContent.visibility = View.GONE
         loadingIndicator.visibility = View.VISIBLE
-//        sharedPreferences = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-//        val userId = sharedPreferences.getString("sub", null)
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null)
 
-//        val targetPhis = fetchUserData(accessToken.toString())
         fetchUserData(accessToken.toString())
 
         rankImageView = view.findViewById(R.id.rankImageView)
@@ -118,15 +114,7 @@ class HomeFragment : Fragment() {
         progressChart = view.findViewById(R.id.progressChart)
         weightLeftText = view.findViewById(R.id.weightLeftText)
 
-//        val userName = "Иван"
-//        greetingText.text = "За работу, $userName 💪"
 
-//        val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
-//        updateXpUI(level, currentXp, maxXp, title)
-
-//        loadPhrases()
-//        startPhraseRotation()
-//        setupProgressChart()
 
         //шаги и прогрессбар для них
         val stepsDone = 0      // получай из БД или часов
@@ -139,23 +127,11 @@ class HomeFragment : Fragment() {
         stepsText.text = "$stepsDone / $stepsGoal шагов"
         stepsProgressBar.progress = stepsPercentage
 
-//        // Кнопка теста добавления XP (временно, для проверки анимации и звука)
-//        val testXpButton = view.findViewById<Button>(R.id.testXpButton)
-//        testXpButton.setOnClickListener {
-//            currentTotalXp += 50
-//
-//            val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
-//            val accessToken = preferences.getString("access_jwt", null)
-//            updateUserXp(accessToken.toString(), currentTotalXp)
-//
-//            val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
-//            updateXpUI(level, currentXp, maxXp, title)
-//        }
+
 
         val knowledgeCard = view.findViewById<CardView>(R.id.knowledgeCard)
         knowledgeCard.setOnClickListener {
             // Запускаем анимацию переключения текста
-//            changeTextOnClick(targetPhis.toString())
             changeTextOnClick()
         }
 
@@ -189,6 +165,8 @@ class HomeFragment : Fragment() {
         }
 
     }
+
+
 
     private fun loadNotesAndShowDialog() {
         showNotesDialog(noteText)
@@ -246,11 +224,7 @@ class HomeFragment : Fragment() {
                 "nutrition" -> getString(R.string.url_nutrition) + "getNutritionData"
                 else -> throw IllegalArgumentException("Неизвестный адрес URL: $urlAddress")
             }
-//            val url = when (urlAddress) {
-//                "auth" -> getString(R.string.url_auth) + "getUserData"
-//                "progress" -> getString(R.string.url_progress) + "userProgress"
-//                else -> throw IllegalArgumentException("Неизвестный адрес URL: $urlAddress")
-//            }
+
 
             val formBody = FormBody.Builder()
                 .add("access_token", accessToken)
@@ -288,10 +262,6 @@ class HomeFragment : Fragment() {
                                 "auth" -> parseUserData(jsonResponse)
                                 "nutrition" -> ParseNutritionData(jsonResponse)
                             }
-//                            when (urlAddress) {
-//                                "auth" -> parseUserData(jsonResponse)
-//                                "progress" -> parseProgressData(jsonResponse)
-//                            }
                         } catch (e: JSONException) {
                             showToast("Ошибка разбора данных")
                         }
@@ -425,21 +395,14 @@ class HomeFragment : Fragment() {
 
 
     private fun parseUserData(jsonData: JSONObject){
-//        val jsonObject = JSONObject(jsonData)
 
         val userName = jsonData.getString("username")
-//        val level = jsonObject.getInt("level")
-//        val currentXp = jsonObject.getInt("currentXp")
-//        val maxXp = jsonObject.getInt("maxXp")
-//        val title = jsonObject.getString("title")
         val xp = jsonData.getString("xp")
         currentTotalXp = xp.toInt()
         noteText = jsonData.getString("notes")
         val weight = jsonData.getDouble("weight")
         targetWeight = jsonData.getDouble("target_weight")
         val targetPhis = jsonData.getString("target_phis")
-//        val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
-//        updateXpUI(level, currentXp, maxXp, title)
 
 
 
@@ -466,14 +429,9 @@ class HomeFragment : Fragment() {
         // Обновляем UI с полученными данными
         requireActivity().runOnUiThread {
             greetingText.text = "За работу, $userName 💪"
-//            updateXpUI(level, currentXp, maxXp, title)
             weightText.text = "Текущий вес: ${String.format("%.0f", weight.toFloat())} кг"
-//            weightText.text = weight.toString()
             goalWeightText.text = "Цель: ${String.format("%.0f", targetWeight.toFloat())} кг"
 
-//            goalWeightText.text = targetWeight.toString()
-
-//            val (level, currentXp, maxXp, title) = getLevelInfo(currentXp)
 
             val startWeight = weight.toFloat()
             currentWeight = weight.toFloat()
@@ -483,7 +441,6 @@ class HomeFragment : Fragment() {
             val progressPercent = if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
             val remaining = kotlin.math.abs(currentWeight - targetWeight)
 
-//            progressPercentText.text = "Прогресс: ${progressPercent.toInt()}%"
             weightLeftText.text = "Осталось: ${"%.0f".format(remaining)} кг"
 
             val (level, currentXp, maxXp, title) = getLevelInfo(currentTotalXp)
@@ -494,7 +451,6 @@ class HomeFragment : Fragment() {
             view?.findViewById<ScrollView>(R.id.mainContent)?.visibility = View.VISIBLE
             view?.findViewById<ProgressBar>(R.id.loadingIndicator)?.visibility = View.GONE
         }
-//        return targetPhis
     }
 
     private fun parseWeightData(jsonData: JSONObject) {
@@ -730,18 +686,6 @@ class HomeFragment : Fragment() {
         }.start()
     }
 
-//    class DateAxisFormatter(private val dates: List<String>) : ValueFormatter() {
-//        private val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//        private val outputFormat = SimpleDateFormat("d MMM", Locale("ru"))
-//
-//        override fun getFormattedValue(value: Float): String {
-//            val index = value.toInt()
-//            return if (index in dates.indices) {
-//                val date = inputFormat.parse(dates[index])
-//                outputFormat.format(date ?: Date())
-//            } else ""
-//        }
-//    }
 
     class DateAxisFormatter(private val dates: List<String>) : ValueFormatter() {
         // Устанавливаем новый формат для входящих строк дат
@@ -802,66 +746,6 @@ class HomeFragment : Fragment() {
         MediaPlayer.create(requireContext(), R.raw.level_up_ding_2).start()
     }
 
-//    private fun setupProgressChart() {
-//        // Пример данных (в будущем ты получишь их с сервера)
-//        val weightHistory = listOf(
-//            WeightEntry("2025-05-01", 78f),
-//            WeightEntry("2025-05-03", 75.4f),
-//            WeightEntry("2025-05-05", 74.8f)
-//
-//        )
-//
-//        val entries = weightHistory.mapIndexed { index, entry ->
-//            Entry(index.toFloat(), entry.weight)
-//        }
-//
-//        val dataSet = LineDataSet(entries, "Вес (кг)").apply {
-//            color = resources.getColor(R.color.teal_700, null)
-//            valueTextColor = resources.getColor(R.color.black, null)
-//            lineWidth = 2.5f
-//            circleRadius = 4f
-//            setDrawFilled(true)
-//            fillAlpha = 100
-//            fillColor = resources.getColor(R.color.teal_200, null)
-//            mode = LineDataSet.Mode.CUBIC_BEZIER
-//        }
-//
-//        dataSet.setDrawValues(false) // отключить отображение значений на графике
-//        progressChart.data = LineData(dataSet)
-//
-//        progressChart.apply {
-//            description.isEnabled = false
-//            axisRight.isEnabled = false
-//
-//            xAxis.position = XAxis.XAxisPosition.BOTTOM
-//            xAxis.setDrawGridLines(false)
-//            xAxis.labelRotationAngle = -30f
-//            xAxis.granularity = 1f
-//            xAxis.valueFormatter = DateAxisFormatter(weightHistory.map { it.date })
-//
-//            axisLeft.setDrawGridLines(true)
-//            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-//
-//            legend.isEnabled = false
-//            setTouchEnabled(false)
-//            invalidate()
-//        }
-//
-//        val startWeight = weightHistory.first().weight
-//        val currentWeight = weightHistory.last().weight
-//        val goalWeight = 70f
-//
-//        weightText.text = "Текущий вес: ${currentWeight.toInt()} кг"
-//        goalWeightText.text = "Цель: ${goalWeight.toInt()} кг"
-//
-//        val delta = goalWeight - startWeight
-//        val progressDelta = currentWeight - startWeight
-//        val progressPercent = if (delta != 0f) (progressDelta / delta * 100).coerceIn(0f, 100f) else 0f
-//        val remaining = kotlin.math.abs(currentWeight - goalWeight)
-//
-////        progressPercentText.text = "Прогресс: ${progressPercent.toInt()} хахахаха%"
-//        weightLeftText.text = "Осталось: ${"%.1f".format(remaining)} кг"
-//    }
 
     private fun calculateNutrition(
         weightKg: Float,

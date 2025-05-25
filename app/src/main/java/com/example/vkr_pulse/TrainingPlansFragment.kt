@@ -45,20 +45,6 @@ class TrainingPlansFragment : Fragment() {
         btnAll = view.findViewById(R.id.btnAll)
         plansContainer = view.findViewById(R.id.trainingPlansContainer)
 
-        // Пример списков тренировок
-//        val recommendedPlans = listOf(
-//            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
-//            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
-//            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass)
-//        )
-//        val allPlans = listOf(
-//            TrainingPlan("Силовая на всё тело", "3 раза в неделю, 60 мин", R.drawable.ic_mass),
-//            TrainingPlan("HIIT-интервалы", "2 раза в неделю, 30 мин", R.drawable.ic_mass),
-//            TrainingPlan("Функциональный тренинг", "3 раза в неделю, 45 мин", R.drawable.ic_mass),
-//            TrainingPlan("Базовая выносливость", "4 раза в неделю, 40 мин", R.drawable.ic_mass),
-//            TrainingPlan("Тренировка на спину и пресс", "2 раза в неделю, 50 мин", R.drawable.ic_mass)
-//        )
-
         // По дефолту выбрана "Для меня"
         setButtonsActive(isRecommendedActive = true)
 

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="22dp"
+    android:paddingBottom="18dp"
+    android:background="@drawable/rounded_dialog_bg">
+
+    <!-- Дата и иконка -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center_vertical"
+android:layout_marginBottom="6dp">
+
+<ImageView
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:src="@drawable/ic_calendar"
+    android:tint="#FF6557"
+    android:layout_marginRight="10dp"
+    android:contentDescription="Календарь"/>
+
+<TextView
+    android:id="@+id/dateText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="25 мая 2025"
+    android:textColor="#23262F"
+    android:textSize="19sp"
+    android:fontFamily="@font/lato_black"/>
+</LinearLayout>
+
+    <!-- Программа и тип тренировки -->
+<TextView
+android:id="@+id/programText"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Программа: Масса"
+android:textColor="#101820"
+android:textSize="18sp"
+android:layout_marginTop="8dp"
+android:fontFamily="@font/lato_black"/>
+
+<TextView
+android:id="@+id/typeText"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Тип: Силовая"
+android:textColor="#4A4A4A"
+android:textSize="17sp"
+android:layout_marginTop="2dp"
+android:fontFamily="@font/lato"/>
+
+    <!-- Продолжительность -->
+<LinearLayout
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center_vertical"
+android:layout_marginTop="8dp">
+
+<ImageView
+    android:layout_width="22dp"
+    android:layout_height="22dp"
+    android:src="@drawable/ic_clock"
+    android:tint="#A0A4B8"
+    android:layout_marginEnd="8dp"
+    android:contentDescription="Время"/>
+
+<TextView
+    android:id="@+id/durationText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="45 минут"
+    android:textColor="#444"
+    android:textSize="16sp"
+    android:fontFamily="@font/lato"/>
+</LinearLayout>
+
+    <!-- Заметка к тренировке -->
+<TextView
+android:id="@+id/noteLabel"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Заметка"
+android:textColor="#777"
+android:textSize="15sp"
+android:fontFamily="@font/lato_black"
+android:layout_marginTop="12dp"
+android:layout_marginBottom="2dp"/>
+
+<TextView
+android:id="@+id/noteText"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Комментарий к тренировке"
+android:textColor="#444"
+android:textSize="15sp"
+android:background="@drawable/bg_edittext_rounded"
+android:padding="12dp"
+android:fontFamily="@font/lato"
+android:minHeight="44dp"/>
+
+    <!-- Кнопки -->
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="end"
+android:layout_marginTop="18dp">
+
+<Button
+    android:id="@+id/editNoteButton"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:text="Изменить заметку"
+    android:textColor="#FFF"
+    android:layout_margin="4dp"
+    android:paddingHorizontal="8dp"
+    android:background="@drawable/bg_button_primary"
+    android:backgroundTint="@color/pink"    android:textSize="15sp"
+    android:fontFamily="@font/lato_black"
+    android:layout_marginLeft="0dp"
+    />
+
+<Button
+    android:id="@+id/closeButton"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:text="Закрыть"
+    android:textColor="@color/pink"
+    android:background="@drawable/bg_button_primary"
+    android:backgroundTint="@color/white"
+    android:textSize="15sp"
+    android:layout_margin="4dp"
+    android:fontFamily="@font/lato_black"
+    />
+</LinearLayout>
+    </LinearLayout>
