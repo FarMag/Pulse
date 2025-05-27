@@ -128,23 +128,21 @@ class TrainingPlansFragment : Fragment() {
                 val plans = mutableListOf<TrainingPlan>()
                 for (i in 0 until jsonResponse.length()) {
                     val planJson = jsonResponse.getJSONObject(i)
+                    val id = planJson.getInt("id")
                     val name = planJson.getString("name")
                     val description = planJson.getString("description")
                     val exercises = planJson.getString("exercises")
-                    // Получаем значение цели
                     val goalString = planJson.getString("goal")
 
-                    // Определяем соответствующий ресурс иконки в зависимости от значения цели
                     val iconRes = when (goalString) {
                         "mass" -> R.drawable.ic_mass
                         "losing" -> R.drawable.ic_losing
                         "keeping" -> R.drawable.ic_keeping
                         "longevity" -> R.drawable.ic_longevity
-                        else -> R.drawable.ic_mass // Ресурс по умолчанию, если цель не распознана
+                        else -> R.drawable.ic_mass
                     }
 
-                    val trainingPlan = TrainingPlan(name, description, exercises, iconRes)
-                    plans.add(trainingPlan)
+                    plans.add(TrainingPlan(id, name, description, exercises, iconRes))
                 }
 
                 // Обновляем UI с новыми планами
@@ -158,21 +156,22 @@ class TrainingPlansFragment : Fragment() {
     }
 
     private fun updatePlansUI(plans: List<TrainingPlan>) {
-        // Очищаем контейнер перед добавлением новых планов
         plansContainer.removeAllViews()
         for (plan in plans) {
-            // Инфлейтим представление для каждого плана
             val itemView = layoutInflater.inflate(R.layout.item_training_plan, plansContainer, false)
             itemView.findViewById<TextView>(R.id.planName).text = plan.name
             itemView.findViewById<TextView>(R.id.planDesc).text = plan.desc
             itemView.findViewById<TextView>(R.id.planExercises).text = plan.exercises
             itemView.findViewById<ImageView>(R.id.planIcon).setImageResource(plan.iconRes)
-
             itemView.setOnClickListener {
-                showTrainingPlanDialog(plan.name, plan.desc, plan.exercises, plan.iconRes)
+                showTrainingPlanDialog(
+                    plan.id,
+                    plan.name,
+                    plan.desc,
+                    plan.exercises,
+                    plan.iconRes
+                )
             }
-
-            // Добавляем инфлейченное представление в контейнер
             plansContainer.addView(itemView)
         }
     }
@@ -183,16 +182,33 @@ class TrainingPlansFragment : Fragment() {
         }
     }
 
-    private fun showTrainingPlanDialog(name: String, desc: String, exercises: String, imageRes: Int) {
+    private fun showTrainingPlanDialog(
+        id: Int,
+        name: String,
+        desc: String,
+        exercises: String,
+        iconRes: Int
+    ) {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_training_plan_details, null)
 
         dialogView.findViewById<TextView>(R.id.planDetailsName).text = name
         dialogView.findViewById<TextView>(R.id.planDetailsDesc).text = desc
         dialogView.findViewById<TextView>(R.id.planDetailsExercises).text = exercises
-        dialogView.findViewById<ImageView>(R.id.planDetailsImage).setImageResource(imageRes)
 
-        val dialog = android.app.AlertDialog.Builder(requireContext(), R.style.CustomDialog) // если нужен прозрачный фон
+        // Получаем идентификатор ресурса по имени
+        val resName = "tp$id"
+        val resId = requireContext().resources.getIdentifier(
+            resName, "drawable", requireContext().packageName
+        )
+        val imageView = dialogView.findViewById<ImageView>(R.id.planDetailsImage)
+        if (resId != 0) {
+            imageView.setImageResource(resId)
+        } else {
+            imageView.setImageResource(iconRes) // Если файла нет, используем иконку цели
+        }
+
+        val dialog = android.app.AlertDialog.Builder(requireContext(), R.style.CustomDialog)
             .setView(dialogView)
             .create()
 
@@ -257,5 +273,5 @@ class TrainingPlansFragment : Fragment() {
 
 
     //    data class TrainingPlan(val name: String, val desc: String, val iconRes: Int)
-data class TrainingPlan(val name: String, val desc: String, val exercises: String, val iconRes: Int)
+data class TrainingPlan(val id: Int, val name: String, val desc: String, val exercises: String, val iconRes: Int)
 }

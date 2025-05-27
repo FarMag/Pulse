@@ -94,7 +94,7 @@ android:fontFamily="@font/lato_black"
 android:layout_marginTop="12dp"
 android:layout_marginBottom="2dp"/>
 
-<TextView
+<EditText
 android:id="@+id/noteText"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"

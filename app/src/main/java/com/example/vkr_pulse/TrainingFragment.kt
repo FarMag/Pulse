@@ -30,6 +30,7 @@ import org.json.JSONObject
 import java.io.IOException
 import android.animation.ValueAnimator
 import android.util.Log
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.kizitonwose.calendar.core.Week
@@ -188,7 +189,8 @@ class TrainingFragment : Fragment() {
                 if (workoutDetailsMap.containsKey(day.date) && day.position == DayPosition.MonthDate) {
                     container.textView.setOnClickListener {
                         val details = workoutDetailsMap[day.date] ?: return@setOnClickListener
-                        showWorkoutDetailsDialog(day.date, details)
+//                        showWorkoutDetailsDialog(day.date, details)
+                        fetchWorkoutByDate(day.date)
                     }
                     container.textView.alpha = 1f
                 } else {
@@ -250,6 +252,262 @@ class TrainingFragment : Fragment() {
             }
         })
     }
+//
+//    private fun fetchWorkoutByDate(date: LocalDate) {
+//        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+//        val accessToken = preferences.getString("access_jwt", null)
+//
+//        if (accessToken.isNullOrEmpty()) {
+//            Toast.makeText(requireContext(), "Ошибка авторизации", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//
+//        val client = OkHttpClient()
+//        val url = getString(R.string.url_workouts) + "getUserSelectedDateTraining"
+//        val formBody = FormBody.Builder()
+//            .add("access_token", accessToken)
+//            .add("date", date.toString())  // Format "yyyy-MM-dd"
+//            .build()
+//        val request = Request.Builder().url(url).post(formBody).build()
+//
+//        client.newCall(request).enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                e.printStackTrace()  // Consider using a logging library
+//                requireActivity().runOnUiThread {
+//                    Toast.makeText(requireContext(), "Ошибка соединения", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                val data = response.body?.string()
+//                if (response.isSuccessful && data != null) {
+//                    try {
+//                        val jsonObject = JSONObject(data)
+//                        val workout = jsonObject.optJSONObject("workout")
+//
+//                        if (workout != null) {
+//                            val details = mapOf(
+//                                "duration" to workout.optString("duration_time", "-"),
+//                                "note" to workout.optString("notes", "-"),
+//                                "program" to workout.optString("plan_id", "-"),
+//                                "type" to "-",  // You can update this if you have a type
+//                                "date" to workout.optString("date", "-")
+//                            )
+//                            requireActivity().runOnUiThread {
+//                                showWorkoutDetailsDialog(date, details)
+//                            }
+//                        } else {
+//                            requireActivity().runOnUiThread {
+//                                Toast.makeText(requireContext(), "Нет данных по тренировке", Toast.LENGTH_SHORT).show()
+//                            }
+//                        }
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()  // Consider logging this exception
+//                        requireActivity().runOnUiThread {
+//                            Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                } else {
+//                    requireActivity().runOnUiThread {
+//                        Toast.makeText(requireContext(), "Ошибка загрузки", Toast.LENGTH_SHORT).show()
+//                        // Consider logging the response body for debugging
+//                    }
+//                }
+//            }
+//        })
+//    }
+
+    private fun updateUserWorkoutNote(accessToken: String?, date: LocalDate, notes: String) {
+        if (accessToken.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Ошибка авторизации", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val client = OkHttpClient()
+        val url = getString(R.string.url_workouts) + "updateUserWorkoutNote"
+        val formBody = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("date", date.toString()) // формат "yyyy-MM-dd"
+            .add("notes", notes)
+            .build()
+        val request = Request.Builder().url(url).post(formBody).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Ошибка соединения", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                requireActivity().runOnUiThread {
+                    if (response.isSuccessful) {
+                        Toast.makeText(requireContext(), "Заметка обновлена", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Ошибка обновления заметки", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+
+    private fun fetchWorkoutByDate(date: LocalDate) {
+        val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+        val accessToken = preferences.getString("access_jwt", null)
+        if (accessToken.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Ошибка авторизации", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val client = OkHttpClient()
+        val urlWorkout = getString(R.string.url_workouts) + "getUserSelectedDateTraining"
+        val formBodyWorkout = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("date", date.toString()) // формат "yyyy-MM-dd"
+            .build()
+        val requestWorkout = Request.Builder().url(urlWorkout).post(formBodyWorkout).build()
+
+        client.newCall(requestWorkout).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Ошибка соединения", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val data = response.body?.string()
+                if (response.isSuccessful && data != null) {
+                    try {
+                        val jsonObject = JSONObject(data)
+                        val workout = jsonObject.optJSONObject("workout")
+                        if (workout != null) {
+                            val planId = workout.optInt("plan_id", -1)
+                            val durationString = workout.optString("duration_time", "-")
+                            val duration = durationString.toFloatOrNull()?.toInt().toString() ?: "-"
+                            val note = workout.optString("notes", "-").takeIf { it != "null" } ?: ""
+                            val type = "-" // Добавьте нужное поле, если появится на сервере
+                            val dateStr = workout.optString("date", "-")
+
+                            // Если planId валидный, делаем второй запрос
+                            if (planId != -1) {
+                                fetchPlanNameAndShowDialog(
+                                    client, accessToken, planId,
+                                    date, duration, note, type
+                                )
+                            } else {
+                                // Если planId не найден, выводим как раньше
+                                val details = mapOf(
+                                    "duration" to duration,
+                                    "note" to note,
+                                    "program" to "-",
+                                    "type" to type,
+                                    "date" to dateStr
+                                )
+                                requireActivity().runOnUiThread {
+                                    showWorkoutDetailsDialog(date, details)
+                                }
+                            }
+                        } else {
+                            requireActivity().runOnUiThread {
+                                Toast.makeText(requireContext(), "Нет данных по тренировке", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(requireContext(), "Ошибка разбора данных", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "Ошибка загрузки", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun fetchPlanNameAndShowDialog(
+        client: OkHttpClient,
+        accessToken: String,
+        planId: Int,
+        date: LocalDate,
+        duration: String,
+        note: String,
+        type: String
+    ) {
+        // URL для получения инфы о плане тренировок
+        val urlPlan = getString(R.string.url_training_plan) + "getNameTrainingPlan"
+        val formBodyPlan = FormBody.Builder()
+            .add("access_token", accessToken)
+            .add("plan_id", planId.toString())
+            .build()
+        val requestPlan = Request.Builder().url(urlPlan).post(formBodyPlan).build()
+
+        client.newCall(requestPlan).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    val details = mapOf(
+                        "duration" to duration,
+                        "note" to note,
+                        "program" to "Ошибка загрузки названия плана",
+                        "type" to type
+                    )
+                    showWorkoutDetailsDialog(date, details)
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseData = response.body?.string()
+                var workoutPlanName = "-"
+                var workoutPlanType = "-"
+
+                if (response.isSuccessful && responseData != null) {
+                    try {
+                        val jsonObject = JSONObject(responseData)
+
+                        // Извлекаем название плана
+                        workoutPlanName = jsonObject.optString("plan_name",
+                            jsonObject.optString("name", "-")
+                        )
+                        val goal = jsonObject.optString("goal")
+
+                        // Определяем тип плана на основе цели
+                        workoutPlanType = when (goal) {
+                            "losing" -> "Похудение"
+                            "mass" -> "Набор мышечной массы"
+                            "keeping" -> "Поддержание формы"
+                            "longevity" -> "Спортивное долголетие"
+                            else -> "-" // Значение по умолчанию
+                        }
+                    } catch (e: Exception) {
+                        workoutPlanName = "-"
+                        // Логирование ошибки можно добавить здесь, если нужно
+                    }
+                } else {
+                    workoutPlanName = "-"
+                }
+
+                // Подготовка деталей тренировки для отображения
+                val workoutDetails = mapOf(
+                    "duration" to duration,
+                    "note" to note,
+                    "program" to workoutPlanName,
+                    "type" to workoutPlanType
+                )
+
+                // Обновление UI на главном потоке
+                requireActivity().runOnUiThread {
+                    showWorkoutDetailsDialog(date, workoutDetails)
+                }
+            }
+
+        })
+    }
+
 
     // Парсим даты из JSON-ответа Python-сервера
     private fun parseWorkoutDates(jsonData: String) {
@@ -364,7 +622,14 @@ class TrainingFragment : Fragment() {
         }
 
         dialogView.findViewById<Button>(R.id.editNoteButton).setOnClickListener {
-            Toast.makeText(requireContext(), "Редактирование заметки в демо!", Toast.LENGTH_SHORT).show()
+            val noteEditText = dialogView.findViewById<EditText>(R.id.noteText)
+            val newNote = noteEditText.text.toString()
+//            Toast.makeText(requireContext(), "Редактирование заметки в демо!", Toast.LENGTH_SHORT).show()
+            val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
+            val accessToken = preferences.getString("access_jwt", null)
+            updateUserWorkoutNote(accessToken, date, newNote)
+//            showEditNoteDialog(date, details["note"] ?: "")
+            alertDialog.dismiss()
         }
 
         alertDialog.show()
