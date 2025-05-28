@@ -152,19 +152,26 @@ class CheckUserAuthorizationActivity : AppCompatActivity() {
 
 
     private fun navigateToMainHomeActivity() {
-        val intent = Intent(this, MainHomeActivity::class.java) // или используйте FragmentManager
-        startActivity(intent)
-        finish() // Закрываем текущую Activity
+        runOnUiThread {
+            val intent = Intent(this, MainHomeActivity::class.java) // или используйте FragmentManager
+            startActivity(intent)
+            finish() // Закрываем текущую Activity
+        }
     }
 
     private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        runOnUiThread {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        runOnUiThread {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
 

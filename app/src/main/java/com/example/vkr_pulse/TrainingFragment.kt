@@ -47,6 +47,7 @@ class TrainingFragment : Fragment() {
 
     private lateinit var calendarView: CalendarView
     private lateinit var monthTitle: TextView
+    private lateinit var activityTimeValue: TextView
 
     private lateinit var calendarCard: CardView
     private var currentCalendarRows: Int = 0
@@ -133,6 +134,7 @@ class TrainingFragment : Fragment() {
         // Календарь
         calendarView = view.findViewById(R.id.calendarView)
         monthTitle = view.findViewById(R.id.monthTitle)
+        activityTimeValue = view.findViewById(R.id.activityTimeValue)
         val previousMonthButton = view.findViewById<ImageView>(R.id.previousMonth)
         val nextMonthButton = view.findViewById<ImageView>(R.id.nextMonth)
 
@@ -205,6 +207,7 @@ class TrainingFragment : Fragment() {
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null)
         if (!accessToken.isNullOrEmpty()) getUserDateTraining(accessToken)
+        if (!accessToken.isNullOrEmpty()) getUserTodayTraining(accessToken)
 
         calendarView.monthScrollListener = { month ->
             updateMonthTitle(month.yearMonth)
@@ -219,7 +222,6 @@ class TrainingFragment : Fragment() {
         }
     }
 
-    // Получение дат тренировок с сервера
     private fun getUserDateTraining(accessToken: String) {
         val client = OkHttpClient()
         val url = getString(R.string.url_workouts) + "getUserDateTraining"
@@ -247,6 +249,44 @@ class TrainingFragment : Fragment() {
                 } else {
                     requireActivity().runOnUiThread {
 //                        Toast.makeText(requireContext(), "Ошибка загрузки тренировок", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun getUserTodayTraining(accessToken: String) {
+        val client = OkHttpClient()
+        val url = getString(R.string.url_workouts) + "getUserTodayTraining"
+        val formBody = FormBody.Builder().add("access_token", accessToken).build()
+        val request = Request.Builder().url(url).post(formBody).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Ошибка соединения", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val data = response.body?.string()
+                if (response.isSuccessful && data != null) {
+                    try {
+                        val jsonObj = JSONObject(data)
+                        val durationTime = jsonObj.optString("duration_time", 0.toString()).toFloat().toInt().toString()
+                        requireActivity().runOnUiThread {
+                            activityTimeValue.text = "$durationTime минут"
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        requireActivity().runOnUiThread {
+                            activityTimeValue.text = "0 минут"
+                        }
+                    }
+                } else {
+                    requireActivity().runOnUiThread {
+                        activityTimeValue.text = "0 минут"
                     }
                 }
             }
