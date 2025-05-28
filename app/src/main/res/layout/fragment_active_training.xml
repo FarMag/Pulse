@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activeTrainingRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/planImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Фото тренировки"
+            app:shapeAppearanceOverlay="@style/TopRoundedImageDialog" />
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="end|top"
+            android:layout_margin="12dp"
+            android:padding="8dp"
+            android:tint="@color/gray"
+            android:contentDescription="Закрыть"
+            android:background="@drawable/bg_circle_transparent"/>
+    </FrameLayout>
+    <!-- Название -->
+    <TextView
+        android:id="@+id/planTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Название тренировки"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/lato_black"
+        android:textColor="#1B2029" />
+
+    <!-- Описание и упражнения -->
+
+
+    <ScrollView
+        android:id="@+id/descScroll"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_marginTop="8dp"
+        android:fillViewport="true">
+
+        <TextView
+            android:id="@+id/planDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:fontFamily="@font/lato"
+            android:text="Описание и упражнения"
+            android:textColor="#555"
+            android:textSize="15sp" />
+    </ScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/timerBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/timerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00"
+                android:textSize="38sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:fontFamily="@font/lato_black"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="4dp">
+
+                <Button
+                    android:id="@+id/timerStartBtn"
+                    android:layout_width="145dp"
+                    android:layout_height="40dp"
+                    android:text="Старт"
+                    android:layout_margin="4dp"
+                    android:backgroundTint="@color/pink"
+                    android:background="@drawable/rounded_button_normal"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/lato_black"/>
+
+                <Button
+                    android:id="@+id/timerResetBtn"
+                    android:layout_width="145dp"
+                    android:layout_height="40dp"
+                    android:text="Сброс"
+                    android:layout_margin="4dp"
+                    android:backgroundTint="@color/gray"
+                    android:background="@drawable/rounded_button_normal"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/lato"/>
+
+            </LinearLayout>
+
+            <!-- Кнопка блокнота -->
+            <Button
+                android:id="@+id/notesBtn"
+                android:layout_width="300dp"
+                android:layout_height="44dp"
+                android:text="Открыть блокнот"
+                android:background="@drawable/bg_button_secondary"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:layout_margin="4dp"
+                android:layout_marginHorizontal="20dp"
+                android:fontFamily="@font/lato_black"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Завершить тренировку -->
+    <Button
+        android:id="@+id/finishTrainingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Завершить тренировку"
+        android:background="@drawable/bg_button_primary"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="18dp"
+        android:fontFamily="@font/lato_black"
+        android:layout_marginTop="2dp" />
+</LinearLayout>

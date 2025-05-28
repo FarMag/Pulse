@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="6dp"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/levelRankImage"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/cropped_image_1"
+        android:contentDescription="Звание" />
+
+    <TextView
+        android:id="@+id/levelRankName"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Новичок"
+        android:textSize="18sp"
+        android:fontFamily="@font/lato_black"
+        android:textColor="#23262F"
+        android:layout_marginStart="10dp" />
+
+    <TextView
+        android:id="@+id/levelRange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1–4"
+        android:textSize="14sp"
+        android:textColor="#73818C"
+        android:fontFamily="@font/lato" />
+</LinearLayout>

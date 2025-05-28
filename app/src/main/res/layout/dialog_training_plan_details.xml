@@ -1,4 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,83 +11,80 @@
     android:paddingStart="0dp"
     android:paddingEnd="0dp">
 
-    <!-- Большая картинка -->
-    <ImageView
+    <!-- Картинка с верхними скруглениями -->
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/planDetailsImage"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_mass"
-        android:background="@drawable/bg_top_rounded"
-        android:contentDescription="Фото плана" />
+        android:contentDescription="Фото плана"
+        app:shapeAppearanceOverlay="@style/TopRoundedImageDialog"/>
 
-    <!-- Прокручиваемый контент (название, описание, упражнения) -->
+    <!-- Прокручиваемый контент -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="400dp"
-    android:overScrollMode="always"
-    android:fillViewport="true"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:layout_marginTop="0dp"
-    android:layout_marginBottom="0dp">
+        android:overScrollMode="always"
+        android:fillViewport="true">
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:id="@+id/planDetailsName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Название плана"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:textColor="#1B2029"
+                android:fontFamily="@font/lato_black"
+                android:layout_marginTop="4dp"
+                />
+
+            <TextView
+                android:id="@+id/planDetailsDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Подробное описание"
+                android:textSize="15sp"
+                android:textColor="#5C5C5C"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/lato"
+                />
+
+            <TextView
+                android:id="@+id/planDetailsExercises"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Упражнения"
+                android:textSize="15sp"
+                android:textColor="#5C5C5C"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/lato"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка всегда внизу -->
+    <Button
+        android:id="@+id/openPlanDetailsButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="6dp">
-
-        <TextView
-            android:id="@+id/planDetailsName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Название плана"
-            android:textSize="20sp"
-            android:textColor="#1B2029"
-            android:fontFamily="@font/lato_black"
-            android:layout_marginTop="4dp"
-            />
-
-        <TextView
-            android:id="@+id/planDetailsDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Подробное описание"
-            android:textSize="15sp"
-            android:textColor="#5C5C5C"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/lato"
-            />
-
-        <TextView
-            android:id="@+id/planDetailsExercises"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Упражнения"
-            android:textSize="15sp"
-            android:textColor="#5C5C5C"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/lato"
-            />
-    </LinearLayout>
-</ScrollView>
-
-    <!-- Кнопка всегда внизу, вне ScrollView -->
-<Button
-android:id="@+id/closePlanDetailsButton"
-android:layout_width="match_parent"
-android:layout_height="42dp"
-android:text="Начать тренировку"
-android:textColor="@color/blue"
-android:background="@drawable/bg_button_secondary"
-android:layout_marginTop="24dp"
-android:layout_marginBottom="2dp"
-    android:layout_marginHorizontal="24dp"
-android:textSize="15sp"
-android:fontFamily="@font/lato_black"
-    />
-    </LinearLayout>
+        android:layout_height="42dp"
+        android:text="Начать тренировку"
+        android:textColor="@color/blue"
+        android:background="@drawable/bg_button_secondary"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginHorizontal="24dp"
+        android:textSize="15sp"
+        android:fontFamily="@font/lato_black"
+        />
+</LinearLayout>

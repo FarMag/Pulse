@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
@@ -212,7 +213,17 @@ class TrainingPlansFragment : Fragment() {
             .setView(dialogView)
             .create()
 
-        dialogView.findViewById<Button>(R.id.closePlanDetailsButton).setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<Button>(R.id.openPlanDetailsButton).setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("planId", id)
+                putString("planName", name)
+                putString("planDesc", desc)
+                putString("planExercises", exercises)
+                putInt("planImageRes", if (resId != 0) resId else iconRes) // <--- вот тут!
+            }
+            findNavController().navigate(R.id.activeTrainingFragment, bundle)
+            dialog.dismiss()
+        }
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
     }

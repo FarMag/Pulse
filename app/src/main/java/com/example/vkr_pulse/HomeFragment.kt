@@ -114,6 +114,10 @@ class HomeFragment : Fragment() {
         progressChart = view.findViewById(R.id.progressChart)
         weightLeftText = view.findViewById(R.id.weightLeftText)
 
+        val xpCard = view.findViewById<CardView>(R.id.xpCard)
+        xpCard.setOnClickListener {
+            showLevelsDialog()
+        }
 
 
         //шаги и прогрессбар для них
@@ -707,6 +711,66 @@ class HomeFragment : Fragment() {
                 }
             } else ""
         }
+    }
+
+    // показывает в модальном окне возможные уровни и звания
+    private fun showLevelsDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_levels, null)
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Найти контейнер для уровней
+        val container = dialogView.findViewById<LinearLayout>(R.id.levelsListContainer)
+
+        // Сделать таблицу уровней и званий
+        val levels = listOf(
+            "Новичок" to R.drawable.cropped_image_1,
+            "Любитель" to R.drawable.cropped_image_2,
+            "Активист" to R.drawable.cropped_image_3,
+            "Регуляр" to R.drawable.cropped_image_4,
+            "Продвинутый" to R.drawable.cropped_image_5,
+            "Атлет" to R.drawable.cropped_image_6,
+            "Тренер" to R.drawable.cropped_image_7,
+            "Мастер" to R.drawable.cropped_image_8,
+            "Грандмастер" to R.drawable.cropped_image_9,
+            "Гуру" to R.drawable.cropped_image_10,
+            "Легенда" to R.drawable.cropped_image_11,
+            "Чемпион" to R.drawable.cropped_image_12
+        )
+        val levelRanges = listOf(
+            "1–4", "5–9", "10–14", "15–19", "20–24", "25–29",
+            "30–34", "35–39", "40–44", "45–49", "50–54", "55+"
+        )
+        // Твой текущий уровень
+        val (curLevel, _, _, curRank) = getLevelInfo(currentTotalXp)
+
+        for (i in levels.indices) {
+            val row = layoutInflater.inflate(R.layout.item_level_row, container, false)
+            val icon = row.findViewById<ImageView>(R.id.levelRankImage)
+            val name = row.findViewById<TextView>(R.id.levelRankName)
+            val range = row.findViewById<TextView>(R.id.levelRange)
+
+            icon.setImageResource(levels[i].second)
+            name.text = levels[i].first
+            range.text = levelRanges[i]
+
+            // Подсвечиваем текущий
+            if (getRankByLevel(curLevel) == levels[i].first) {
+                row.setBackgroundResource(R.drawable.bg_selected_level)
+            } else {
+                row.setBackgroundColor(0x00000000)
+            }
+            container.addView(row)
+        }
+
+        // Кнопка "Закрыть"
+        dialogView.findViewById<Button>(R.id.closeDialogButton).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 

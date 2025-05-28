@@ -1,6 +1,6 @@
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/homeFragment">
 
@@ -33,4 +33,25 @@
         android:id="@+id/trainingPlansFragment"
         android:name="com.example.vkr_pulse.TrainingPlansFragment"
         android:label="Тренировочные планы"/>
+
+    <fragment
+        android:id="@+id/activeTrainingFragment"
+        android:name="com.example.vkr_pulse.ActiveTrainingFragment"
+        android:label="Тренировка">
+        <argument
+            android:name="planId"
+            app:argType="integer" />
+        <argument
+            android:name="planName"
+            app:argType="string" />
+        <argument
+            android:name="planDesc"
+            app:argType="string" />
+        <argument
+            android:name="planExercises"
+            app:argType="string" />
+        <argument
+            android:name="planImageRes"
+            app:argType="integer" />
+    </fragment>
 </navigation>
