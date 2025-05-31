@@ -33,12 +33,15 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.kizitonwose.calendar.core.Week
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
@@ -64,16 +67,25 @@ class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
     private lateinit var factSources: Array<String>
     private var currentFactIndex = 0
 
+//    private var stepRequestSent = false
+
     private val workoutDetailsMap = mutableMapOf<LocalDate, Map<String, String>>()
 
     override fun onResume() {
         super.onResume()
         Wearable.getDataClient(requireContext()).addListener(this)
+
+//        if(!stepRequestSent) {
+//            requestStepsFromWatch()
+//            stepRequestSent = true
+//        }
+
+        requestStepsFromWatch()
     }
 
     override fun onPause() {
         super.onPause()
-        Wearable.getDataClient(requireContext()).addListener(this)
+        Wearable.getDataClient(requireContext()).removeListener(this)
     }
 
     override fun onDataChanged(dataEvents: DataEventBuffer) {
@@ -86,8 +98,14 @@ class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
 
                 Log.d("PhoneSteps", "Получено с часов: $steps шагов")
 
-                requireActivity().runOnUiThread {
-                    stepsValue.text = "$steps"
+//                requireActivity().runOnUiThread {
+//                    stepsValue.text = "$steps"
+//                }
+
+                if (isAdded && view != null){
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main){
+                        stepsValue.text = "$steps"
+                    }
                 }
             }
         }
@@ -241,9 +259,14 @@ class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
         // Получение токена и загрузка дат тренировок
         val preferences = requireActivity().getSharedPreferences("myPrefs", AppCompatActivity.MODE_PRIVATE)
         val accessToken = preferences.getString("access_jwt", null)
+//        if (!accessToken.isNullOrEmpty() && !stepRequestSent) {
+//            requestStepsFromWatch()
+//            stepRequestSent = true
+//        }
+        if (!accessToken.isNullOrEmpty()) requestStepsFromWatch()
         if (!accessToken.isNullOrEmpty()) getUserDateTraining(accessToken)
         if (!accessToken.isNullOrEmpty()) getUserTodayTraining(accessToken)
-        if (!accessToken.isNullOrEmpty()) requestStepsFromWatch()
+
 
         calendarView.monthScrollListener = { month ->
             updateMonthTitle(month.yearMonth)
@@ -258,9 +281,26 @@ class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
         }
     }
 
+//    private fun requestStepsFromWatch() {
+//        val nodeClient = Wearable.getNodeClient(requireContext())
+//
+//        nodeClient.connectedNodes
+//            .addOnSuccessListener { nodes ->
+//                for (node in nodes) {
+//                    Wearable.getMessageClient(requireContext())
+//                        .sendMessage(node.id, "/request_steps", ByteArray(0))
+//                        .addOnSuccessListener {
+//                            Log.d("Phone", "Step request sent to watch")
+//                        }
+//                        .addOnFailureListener {
+//                            Log.e("Phone", "Failed to send step request", it)
+//                        }
+//                }
+//            }
+//    }
+
     private fun requestStepsFromWatch() {
         val nodeClient = Wearable.getNodeClient(requireContext())
-
         nodeClient.connectedNodes
             .addOnSuccessListener { nodes ->
                 for (node in nodes) {
@@ -816,6 +856,7 @@ class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacks(phraseRunnable)
+//        stepRequestSent = false
     }
 
     class DayViewContainer(view: View) : ViewContainer(view) {
