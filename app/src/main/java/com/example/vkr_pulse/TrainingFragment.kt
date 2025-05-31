@@ -33,12 +33,18 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEvent
+import com.google.android.gms.wearable.DataEventBuffer
+import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.Wearable
 import com.kizitonwose.calendar.core.Week
 
 
-class TrainingFragment : Fragment() {
+class TrainingFragment : Fragment(), DataClient.OnDataChangedListener {
 
     private lateinit var phraseTextView: TextView
+    private lateinit var stepsValue: TextView
     private lateinit var phrases: Array<String>
     private var currentPhraseIndex = 0
     private lateinit var phraseRunnable: Runnable
@@ -59,6 +65,33 @@ class TrainingFragment : Fragment() {
     private var currentFactIndex = 0
 
     private val workoutDetailsMap = mutableMapOf<LocalDate, Map<String, String>>()
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getDataClient(requireContext()).addListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getDataClient(requireContext()).addListener(this)
+    }
+
+    override fun onDataChanged(dataEvents: DataEventBuffer) {
+        for (event in dataEvents) {
+            if (event.type == DataEvent.TYPE_CHANGED &&
+                event.dataItem.uri.path == "/steps") {
+
+                val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
+                val steps = dataMap.getInt("steps", 0)
+
+                Log.d("PhoneSteps", "Получено с часов: $steps шагов")
+
+                requireActivity().runOnUiThread {
+                    stepsValue.text = "$steps"
+                }
+            }
+        }
+    }
 
 
     override fun onCreateView(
@@ -130,6 +163,8 @@ class TrainingFragment : Fragment() {
 //        phrases = resources.getStringArray(R.array.sport_science_phrases)
 //        card.setOnClickListener { showNextPhraseWithAnimation() }
 //        startPhraseRotation()
+
+        stepsValue = view.findViewById(R.id.stepsValue)
 
         // Календарь
         calendarView = view.findViewById(R.id.calendarView)
@@ -208,6 +243,7 @@ class TrainingFragment : Fragment() {
         val accessToken = preferences.getString("access_jwt", null)
         if (!accessToken.isNullOrEmpty()) getUserDateTraining(accessToken)
         if (!accessToken.isNullOrEmpty()) getUserTodayTraining(accessToken)
+        if (!accessToken.isNullOrEmpty()) requestStepsFromWatch()
 
         calendarView.monthScrollListener = { month ->
             updateMonthTitle(month.yearMonth)
@@ -220,6 +256,24 @@ class TrainingFragment : Fragment() {
                 animateCardHeight(firstMonth.weekDays.size)
             }
         }
+    }
+
+    private fun requestStepsFromWatch() {
+        val nodeClient = Wearable.getNodeClient(requireContext())
+
+        nodeClient.connectedNodes
+            .addOnSuccessListener { nodes ->
+                for (node in nodes) {
+                    Wearable.getMessageClient(requireContext())
+                        .sendMessage(node.id, "/request_steps", ByteArray(0))
+                        .addOnSuccessListener {
+                            Log.d("Phone", "Step request sent to watch")
+                        }
+                        .addOnFailureListener {
+                            Log.e("Phone", "Failed to send step request", it)
+                        }
+                }
+            }
     }
 
     private fun getUserDateTraining(accessToken: String) {
@@ -769,4 +823,5 @@ class TrainingFragment : Fragment() {
         val iconView: ImageView = view.findViewById(R.id.workoutIcon)
         val todayBackground: View = view.findViewById(R.id.todayBackground)
     }
+
 }
