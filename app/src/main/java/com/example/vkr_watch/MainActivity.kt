@@ -25,17 +25,36 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
         Wearable.getMessageClient(this).removeListener(this)
     }
 
+//    override fun onMessageReceived(event: MessageEvent) {
+//        if (event.path == "/request_steps") {
+//            Log.d("Wear", "Получена команда на передачу шагов от телефона")
+//            isSending = true
+//            handler.post(stepSender)
+//            runOnUiThread {
+//                serviceStatusTextView.text = "Передача активна"
+//                toggleBtn.text = "Остановить"
+//            }
+//        }
+//    }
+
     override fun onMessageReceived(event: MessageEvent) {
-        if (event.path == "/request_steps") {
-            Log.d("Wear", "Получена команда на передачу шагов от телефона")
-            isSending = true
+    if (event.path == "/request_steps") {
+        Log.d("Wear", "Получена команда на передачу шагов от телефона")
+
+        if (isSending) {
+            // Если разрешено отправлять — запускаем цикл
             handler.post(stepSender)
             runOnUiThread {
                 serviceStatusTextView.text = "Передача активна"
                 toggleBtn.text = "Остановить"
             }
+        } else {
+            // Если отключено — отправляем шаги только один раз
+            sendStepsToPhone(fakeSteps)
+            Log.d("Wear", "Сервис на паузе — шаги отправлены однократно")
         }
     }
+}
     private lateinit var serviceStatusTextView: TextView
     private lateinit var stepsCountTextView: TextView
     private lateinit var toggleBtn: Button
